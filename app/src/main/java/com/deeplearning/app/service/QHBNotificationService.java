@@ -35,7 +35,7 @@ public class QHBNotificationService extends NotificationListenerService {
     @Override
     public void onNotificationPosted(final StatusBarNotification sbn) {
         if(Config.DEBUG) {
-            Log.i(TAG, "onNotificationRemoved");
+            Log.i(TAG, "onNotificationPosted");
         }
         if(!getConfig().isAgreement()) {
             return;

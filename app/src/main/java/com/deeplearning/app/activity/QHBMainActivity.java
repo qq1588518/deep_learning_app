@@ -33,7 +33,7 @@ import java.io.File;
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.service.QiangHongBaoService;
 import com.deeplearning.app.view.BaseSettingsFragment;
-
+import com.deeplearning.app.view.QHBMainFragment;
 import com.deeplearning_app.R;
 import com.deeplearning.app.DLApplication;
 /**
@@ -43,7 +43,7 @@ import com.deeplearning.app.DLApplication;
 public class QHBMainActivity extends QHBSettingsActivity {
 
     private Dialog mTipsDialog;
-    private MainFragment mMainFragment;
+    private QHBMainFragment mMainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
 
     @Override
     public Fragment getSettingsFragment() {
-        mMainFragment = new MainFragment();
+        mMainFragment = new QHBMainFragment();
         return mMainFragment;
     }
 
@@ -172,7 +172,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
     }
 
     /** 显示免责声明的对话框*/
-    private void showAgreementDialog() {
+    public void showAgreementDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         builder.setTitle(R.string.agreement_title);
@@ -196,12 +196,12 @@ public class QHBMainActivity extends QHBSettingsActivity {
     }
 
     /** 分享*/
-    private void showShareDialog() {
+    public void showShareDialog() {
         DLApplication.showShare(this);
     }
 
     /** 二维码*/
-    private void showQrDialog() {
+    public void showQrDialog() {
         final Dialog dialog = new Dialog(this, R.style.QR_Dialog_Theme);
         View view = getLayoutInflater().inflate(R.layout.qr_dialog_layout, null);
         view.setOnClickListener(new View.OnClickListener() {
@@ -231,7 +231,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
     }
 
     /** 显示捐赠的对话框*/
-    private void showDonateDialog() {
+    public void showDonateDialog() {
         final Dialog dialog = new Dialog(this, R.style.QR_Dialog_Theme);
         View view = getLayoutInflater().inflate(R.layout.donate_dialog_layout, null);
         view.setOnClickListener(new View.OnClickListener() {
@@ -258,7 +258,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
     }
 
     /** 显示未开启辅助服务的对话框*/
-    private void showOpenAccessibilityServiceDialog() {
+    public void showOpenAccessibilityServiceDialog() {
         if(mTipsDialog != null && mTipsDialog.isShowing()) {
             return;
         }
@@ -282,7 +282,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
     }
 
     /** 打开辅助服务的设置*/
-    private void openAccessibilityServiceSettings() {
+    public void openAccessibilityServiceSettings() {
         try {
             Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
             startActivity(intent);
@@ -294,7 +294,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
 
     /** 打开通知栏设置*/
     @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
-    private void openNotificationServiceSettings() {
+    public void openNotificationServiceSettings() {
         try {
             Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
             startActivity(intent);
@@ -304,119 +304,5 @@ public class QHBMainActivity extends QHBSettingsActivity {
         }
     }
 
-    public static class MainFragment extends BaseSettingsFragment {
 
-        private SwitchPreference notificationPref;
-        private boolean notificationChangeByUser = true;
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            addPreferencesFromResource(R.xml.main);
-
-            //微信红包开关
-            Preference wechatPref = findPreference(Config.KEY_ENABLE_WECHAT);
-            wechatPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    if((Boolean) newValue && !QiangHongBaoService.isRunning()) {
-                        ((QHBMainActivity)getActivity()).showOpenAccessibilityServiceDialog();
-                    }
-                    return true;
-                }
-            });
-
-            notificationPref = (SwitchPreference) findPreference("KEY_NOTIFICATION_SERVICE_TEMP_ENABLE");
-            notificationPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                        Toast.makeText(getActivity(), "该功能只支持安卓4.3以上的系统", Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-
-                    if(!notificationChangeByUser) {
-                        notificationChangeByUser = true;
-                        return true;
-                    }
-
-                    boolean enalbe = (boolean) newValue;
-
-                    Config.getConfig(getActivity()).setNotificationServiceEnable(enalbe);
-
-                    if(enalbe && !QiangHongBaoService.isNotificationServiceRunning()) {
-                        ((QHBMainActivity)getActivity()).openNotificationServiceSettings();
-                        return false;
-                    }
-                    DLApplication.eventStatistics(getActivity(), "notify_service", String.valueOf(newValue));
-                    return true;
-                }
-            });
-
-            Preference preference = findPreference("KEY_FOLLOW_ME");
-            if(preference != null) {
-                preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        ((QHBMainActivity) getActivity()).showQrDialog();
-                        DLApplication.eventStatistics(getActivity(), "about_author");
-                        return true;
-                    }
-                });
-            }
-
-            preference = findPreference("KEY_DONATE_ME");
-            if(preference != null) {
-                preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        ((QHBMainActivity) getActivity()).showDonateDialog();
-                        DLApplication.eventStatistics(getActivity(), "donate");
-                        return true;
-                    }
-                });
-            }
-
-            findPreference("WECHAT_SETTINGS").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    startActivity(new Intent(getActivity(), QHBWechatSettingsActivity.class));
-                    return true;
-                }
-            });
-
-            findPreference("NOTIFY_SETTINGS").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    startActivity(new Intent(getActivity(), QHBNotifySettingsActivity.class));
-                    return true;
-                }
-            });
-
-        }
-
-        /** 更新快速读取通知的设置*/
-        public void updateNotifyPreference() {
-            if(notificationPref == null) {
-                return;
-            }
-            boolean running = QiangHongBaoService.isNotificationServiceRunning();
-            boolean enable = Config.getConfig(getActivity()).isEnableNotificationService();
-            if( enable && running && !notificationPref.isChecked()) {
-                DLApplication.eventStatistics(getActivity(), "notify_service", String.valueOf(true));
-                notificationChangeByUser = false;
-                notificationPref.setChecked(true);
-            } else if((!enable || !running) && notificationPref.isChecked()) {
-                notificationChangeByUser = false;
-                notificationPref.setChecked(false);
-            }
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            updateNotifyPreference();
-        }
-    }
 }
