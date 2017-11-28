@@ -59,7 +59,8 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import org.tensorflow.demo.env.Logger;
-import com.deeplearning.R;
+
+import com.deeplearning_app.R;
 
 public class CameraConnectionFragment extends Fragment {
   private static final Logger LOGGER = new Logger();

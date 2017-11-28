@@ -35,7 +35,7 @@ import android.hardware.Camera.CameraInfo;
 
 import org.tensorflow.demo.env.Logger;
 
-import com.deeplearning.R;
+import com.deeplearning_app.R;
 
 public class LegacyCameraConnectionFragment extends Fragment {
 

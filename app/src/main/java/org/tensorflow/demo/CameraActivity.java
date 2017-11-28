@@ -44,7 +44,8 @@ import java.nio.ByteBuffer;
 
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
-import com.deeplearning.R;
+
+import com.deeplearning_app.R;
 
 public abstract class CameraActivity extends Activity implements OnImageAvailableListener, Camera.
         PreviewCallback {

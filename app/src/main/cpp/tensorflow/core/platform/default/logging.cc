@@ -25,6 +25,7 @@ limitations under the License.
 
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 namespace tensorflow {
 namespace internal {
