@@ -3,6 +3,7 @@ package com.deeplearning.app.activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.util.Log;
 
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.view.BaseSettingsFragment;
@@ -12,6 +13,7 @@ import com.deeplearning_app.R;
  * Created by qq1588518 on 17/12/01.
  */
 public class QHBNotifySettingsActivity extends QHBSettingsActivity {
+    private static final String TAG = "NotifySettingsFragment";
     @Override
     public Fragment getSettingsFragment() {
         return new NotifySettingsFragment();
@@ -22,7 +24,9 @@ public class QHBNotifySettingsActivity extends QHBSettingsActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
+            if(Config.DEBUG) {
+                Log.i(TAG, "onCreate");
+            }
             addPreferencesFromResource(R.xml.notify_settings);
 
             findPreference(Config.KEY_NOTIFY_SOUND).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

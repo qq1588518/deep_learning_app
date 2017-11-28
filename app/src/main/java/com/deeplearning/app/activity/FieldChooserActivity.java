@@ -12,13 +12,14 @@ import java.util.ArrayList;
 
 import com.deeplearning.app.adapter.CheckListAdapter;
 
+import com.deeplearning.app.config.Config;
 import com.deeplearning_app.R;
 
 /**
  * Created by qq1588518 on 17/12/01.
  */
 public class FieldChooserActivity extends Activity {
-
+    private static final String TAG = "FieldChooserActivity";
     private ListView list1, list2;
     private Button btnDone;
 
@@ -29,6 +30,9 @@ public class FieldChooserActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(Config.DEBUG) {
+            Log.d(TAG, "onCreate");
+        }
 
         setContentView(R.layout.fields_select_main);
 
@@ -38,7 +42,9 @@ public class FieldChooserActivity extends Activity {
         data1.addAll(extras.getStringArrayList("input_fields"));
 
         if(data1.isEmpty()){
-            Log.d("NULLL", "NULLLLLLLL");
+            if(Config.DEBUG) {
+                Log.d("NULLL", "NULLLLLLLL");
+            }
         }
         data2 = new ArrayList<String>();
         data2.clear();
@@ -72,6 +78,9 @@ public class FieldChooserActivity extends Activity {
 
     @Override
     public void finish() {
+        if(Config.DEBUG) {
+            Log.d(TAG, "finish");
+        }
         // Prepare data intent
         Intent data = new Intent();
         data.putExtra("input_fields", arr1);

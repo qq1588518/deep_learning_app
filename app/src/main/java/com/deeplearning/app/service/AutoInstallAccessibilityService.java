@@ -8,7 +8,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
  * 自动安装
  */
 public class AutoInstallAccessibilityService extends BaseAccessibilityService {
-
+    private static final String TAG = "AutoInstallAccessibilityService";
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         super.onAccessibilityEvent(event);

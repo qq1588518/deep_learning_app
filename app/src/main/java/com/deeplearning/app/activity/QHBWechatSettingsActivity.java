@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.util.Log;
 
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.view.BaseSettingsFragment;
@@ -15,7 +16,7 @@ import com.deeplearning_app.R;
  * Created by qq1588518 on 17/12/01.
  */
 public class QHBWechatSettingsActivity extends QHBSettingsActivity {
-
+    private static final String TAG = "QHBWechatSettingsActivity";
     @Override
     public Fragment getSettingsFragment() {
         return new WechatSettingsFragment();
@@ -26,6 +27,11 @@ public class QHBWechatSettingsActivity extends QHBSettingsActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            if(Config.DEBUG) {
+                Log.i(TAG, "onCreate");
+            }
+
             addPreferencesFromResource(R.xml.wechat_settings);
 
             //微信红包模式

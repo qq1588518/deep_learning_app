@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -15,13 +16,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.deeplearning.app.config.Config;
 import com.deeplearning_app.R;
 
 /**
  * Created by qq1588518 on 17/12/01.
  */
 public class ActivityChooserActivity extends ListActivity {
-
+    private static final String TAG = "ActivityChooserActivity";
     private String appName;
 
     ArrayAdapter<String> adapter;
@@ -30,6 +32,10 @@ public class ActivityChooserActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(Config.DEBUG) {
+            Log.d(TAG, "onCreate");
+        }
+
         setContentView(R.layout.list_main);
 
         Bundle extras = getIntent().getExtras();
@@ -51,7 +57,9 @@ public class ActivityChooserActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
+        if(Config.DEBUG) {
+            Log.d(TAG, "onListItemClick");
+        }
 
         try {
             selectedActivity = data.get(position);
@@ -69,6 +77,9 @@ public class ActivityChooserActivity extends ListActivity {
 
     @Override
     public void finish() {
+        if(Config.DEBUG) {
+            Log.d(TAG, "finish");
+        }
         // Prepare data intent
         Intent data = new Intent();
         data.putExtra("activity", selectedActivity);
@@ -78,6 +89,9 @@ public class ActivityChooserActivity extends ListActivity {
     }
 
     private void getActivityList() throws PackageManager.NameNotFoundException {
+        if(Config.DEBUG) {
+            Log.d(TAG, "getActivityList");
+        }
         Intent i = new Intent(Intent.ACTION_MAIN);
         i.addCategory(Intent.CATEGORY_LAUNCHER);
         PackageManager pm = this.getPackageManager();

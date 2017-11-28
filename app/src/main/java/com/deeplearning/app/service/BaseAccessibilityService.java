@@ -20,7 +20,7 @@ import java.util.List;
  * Created by qq1588518 on 17/12/01.
  */
 public class BaseAccessibilityService extends AccessibilityService {
-
+    private static final String TAG = "BaseAccessibilityService";
     private AccessibilityManager mAccessibilityManager;
     private Context mContext;
     private static BaseAccessibilityService mInstance;

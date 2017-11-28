@@ -15,6 +15,7 @@ import static android.content.ContentValues.TAG;
  * Created by qq1588518 on 17/12/01.
  */
 public class AudioSenderThread extends Thread {
+    private static final String TAG = "AudioSenderThread";
     private static final long WAIT_TIME = 5000;//1ms;
     private MediaCodec.BufferInfo eInfo;
     private long startTime = 0;

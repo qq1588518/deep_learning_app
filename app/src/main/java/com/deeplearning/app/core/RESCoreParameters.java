@@ -1,14 +1,14 @@
 package com.deeplearning.app.core;
 
-import com.deeplearning.app.util.LogTools;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import android.util.Log;
 
 /**
  * Created by qq1588518 on 17/12/01.
  */
 public class RESCoreParameters {
+    private static final String TAG = "RESCoreParameters";
     public static final int FILTER_MODE_HARD = 1;
     public static final int FILTER_MODE_SOFT = 2;
 
@@ -90,7 +90,7 @@ public class RESCoreParameters {
     }
 
     public void dump() {
-        LogTools.e(this.toString());
+        Log.e(TAG,this.toString());
     }
 
     @Override

@@ -21,7 +21,7 @@ import java.util.List;
  * Created by qq1588518 on 17/12/01.
  */
 public class AutoReplyAccessibilityService extends BaseAccessibilityService {
-
+    private static final String TAG = "AutoReplyAccessibilityService";
     private final static String MM_PNAME = "com.tencent.mm";
     boolean hasAction = false;
     boolean locked = false;

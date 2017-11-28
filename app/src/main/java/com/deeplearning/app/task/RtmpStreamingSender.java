@@ -1,10 +1,10 @@
 package com.deeplearning.app.task;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.deeplearning.app.rtmp.RESFlvData;
 import com.deeplearning.app.rtmp.RtmpClient;
-import com.deeplearning.app.util.LogTools;
 import com.deeplearning.app.core.RESCoreParameters;
 import com.deeplearning.app.rtmp.FLvMetaData;
 
@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by qq1588518 on 17/12/01.
  */
 public class RtmpStreamingSender implements Runnable {
-
+    private static final String TAG = "RtmpStreamingSender";
     private static final int MAX_QUEUE_CAPACITY = 50;
     private AtomicBoolean mQuit = new AtomicBoolean(false);
     private LinkedBlockingDeque<RESFlvData> frameQueue = new LinkedBlockingDeque<>(MAX_QUEUE_CAPACITY);
@@ -52,9 +52,9 @@ public class RtmpStreamingSender implements Runnable {
             if (frameQueue.size() > 0) {
                 switch (state) {
                     case STATE.START:
-                        LogTools.d("RESRtmpSender,WorkHandler,tid=" + Thread.currentThread().getId());
+                        Log.i(TAG,"RESRtmpSender,WorkHandler,tid=" + Thread.currentThread().getId());
                         if (TextUtils.isEmpty(rtmpAddr)) {
-                            LogTools.e("rtmp address is null!");
+                            Log.e(TAG,"rtmp address is null!");
                             break;
                         }
                         jniRtmpPointer = RtmpClient.open(rtmpAddr, true);
@@ -62,7 +62,7 @@ public class RtmpStreamingSender implements Runnable {
                         String serverIpAddr = null;
                         if (openR == 0) {
                             serverIpAddr = RtmpClient.getIpAddr(jniRtmpPointer);
-                            LogTools.d("server ip address = " + serverIpAddr);
+                            Log.i(TAG,"server ip address = " + serverIpAddr);
                         }
                         if (jniRtmpPointer == 0) {
                             break;
@@ -84,18 +84,18 @@ public class RtmpStreamingSender implements Runnable {
                         }
                         RESFlvData flvData = frameQueue.pop();
                         if (writeMsgNum >= (maxQueueLength * 2 / 3) && flvData.flvTagType == RESFlvData.FLV_RTMP_PACKET_TYPE_VIDEO && flvData.droppable) {
-                            LogTools.d("senderQueue is crowded,abandon video");
+                            Log.i(TAG,"senderQueue is crowded,abandon video");
                             break;
                         }
                         final int res = RtmpClient.write(jniRtmpPointer, flvData.byteBuffer, flvData.byteBuffer.length, flvData.flvTagType, flvData.dts);
                         if (res == 0) {
                             if (flvData.flvTagType == RESFlvData.FLV_RTMP_PACKET_TYPE_VIDEO) {
-                                LogTools.d("video frame sent = " + flvData.size);
+                                Log.i(TAG,"video frame sent = " + flvData.size);
                             } else {
-                                LogTools.d("audio frame sent = " + flvData.size);
+                                Log.i(TAG,"audio frame sent = " + flvData.size);
                             }
                         } else {
-                            LogTools.e("writeError = " + res);
+                            Log.i(TAG,"writeError = " + res);
                         }
 
                         break;
@@ -105,7 +105,7 @@ public class RtmpStreamingSender implements Runnable {
                         }
                         final int closeR = RtmpClient.close(jniRtmpPointer);
                         serverIpAddr = null;
-                        LogTools.e("close result = " + closeR);
+                        Log.i(TAG,"close result = " + closeR);
                         break;
                 }
 
@@ -113,7 +113,7 @@ public class RtmpStreamingSender implements Runnable {
 
         }
         final int closeR = RtmpClient.close(jniRtmpPointer);
-        LogTools.e("close result = " + closeR);
+        Log.i(TAG,"close result = " + closeR);
     }
 
     public void sendStart(String rtmpAddr) {
@@ -138,7 +138,7 @@ public class RtmpStreamingSender implements Runnable {
                 frameQueue.add(flvData);
                 ++writeMsgNum;
             } else {
-                LogTools.d("senderQueue is full,abandon");
+                Log.i(TAG,"senderQueue is full,abandon");
             }
         }
     }

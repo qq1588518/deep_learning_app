@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
  * Created by qq1588518 on 17/12/01.
  */
 public final class BitmapUtils {
+    private static final String TAG = "BitmapUtils";
 
     private BitmapUtils() {}
 

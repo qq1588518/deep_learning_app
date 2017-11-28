@@ -27,7 +27,6 @@ import com.deeplearning.app.notification.IStatusBarNotification;
  * 抢红包外挂服务
  */
 public class QHBAccessibilityService extends AccessibilityService {
-
     private static final String TAG = "QHBAccessibilityService";
 
     private static final Class[] ACCESSBILITY_JOBS= {
@@ -42,7 +41,9 @@ public class QHBAccessibilityService extends AccessibilityService {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        if(Config.DEBUG) {
+            Log.d(TAG, " onCreate");
+        }
         mAccessbilityJobs = new ArrayList<>();
         mPkgAccessbilityJobMap = new HashMap<>();
 
@@ -65,7 +66,9 @@ public class QHBAccessibilityService extends AccessibilityService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "qianghongbao service destory");
+        if(Config.DEBUG) {
+            Log.d(TAG, " onDestroy");
+        }
         if(mPkgAccessbilityJobMap != null) {
             mPkgAccessbilityJobMap.clear();
         }
@@ -86,13 +89,18 @@ public class QHBAccessibilityService extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
-        Log.d(TAG, "qianghongbao service interrupt");
+        if(Config.DEBUG) {
+            Log.d(TAG, " onInterrupt");
+        }
         Toast.makeText(this, "中断抢红包服务", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        if(Config.DEBUG) {
+            Log.d(TAG, " onServiceConnected");
+        }
         service = this;
         //发送广播，已经连接上了
         Intent intent = new Intent(com.deeplearning.app.config.Config.ACTION_QIANGHONGBAO_SERVICE_CONNECT);
@@ -103,7 +111,7 @@ public class QHBAccessibilityService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if(Config.DEBUG) {
-            Log.d(TAG, "事件--->" + event );
+            Log.d(TAG, " onAccessibilityEvent 事件--->" + event );
         }
         String pkn = String.valueOf(event.getPackageName());
         if(mAccessbilityJobs != null && !mAccessbilityJobs.isEmpty()) {
@@ -131,6 +139,9 @@ public class QHBAccessibilityService extends AccessibilityService {
         if(service == null || service.mPkgAccessbilityJobMap == null) {
             return;
         }
+        if(Config.DEBUG) {
+            Log.d(TAG, " handeNotificationPosted 事件--->" + notificationService.getPackageName() );
+        }
         String pack = notificationService.getPackageName();
         AccessbilityJob job = service.mPkgAccessbilityJobMap.get(pack);
         if(job == null) {
@@ -146,6 +157,9 @@ public class QHBAccessibilityService extends AccessibilityService {
     public static boolean isRunning() {
         if(service == null) {
             return false;
+        }
+        if(Config.DEBUG) {
+            Log.d(TAG, " isRunning");
         }
         AccessibilityManager accessibilityManager = (AccessibilityManager) service.getSystemService(Context.ACCESSIBILITY_SERVICE);
         AccessibilityServiceInfo info = service.getServiceInfo();
@@ -171,6 +185,9 @@ public class QHBAccessibilityService extends AccessibilityService {
 
     /** 快速读取通知栏服务是否启动*/
     public static boolean isNotificationServiceRunning() {
+        if(Config.DEBUG) {
+            Log.d(TAG, " isNotificationServiceRunning");
+        }
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
             return false;
         }
@@ -180,6 +197,5 @@ public class QHBAccessibilityService extends AccessibilityService {
         } catch (Throwable t) {}
         return false;
     }
-
 
 }

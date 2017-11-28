@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -11,13 +12,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import com.deeplearning.app.config.Config;
 import com.deeplearning_app.R;
 
 /**
  * Created by qq1588518 on 17/12/01.
  */
 public class RecordActivity extends BaseActivity {
-
+    private static final String TAG = "RecordActivity";
     @BindView(R.id.btn_screen_record)
     Button btnScreenRecord;
     @BindView(R.id.btn_camera_record)
@@ -35,6 +37,9 @@ public class RecordActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(Config.DEBUG) {
+            Log.i(TAG, "onCreate");
+        }
         setContentView(R.layout.activity_record);
         ButterKnife.bind(this);
         verifyPermissions();
@@ -42,6 +47,9 @@ public class RecordActivity extends BaseActivity {
 
     @OnClick({R.id.btn_screen_record, R.id.btn_camera_record})
     public void onViewClicked(View view) {
+        if(Config.DEBUG) {
+            Log.i(TAG, "onViewClicked");
+        }
         switch (view.getId()) {
             case R.id.btn_screen_record:
                 ScreenRecordActivity.launchActivity(this);
@@ -53,6 +61,9 @@ public class RecordActivity extends BaseActivity {
     }
 
     public void verifyPermissions() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "verifyPermissions");
+        }
         int CAMERA_permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         int RECORD_AUDIO_permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         int WRITE_EXTERNAL_STORAGE_permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -73,6 +84,9 @@ public class RecordActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(Config.DEBUG) {
+            Log.i(TAG, "onRequestPermissionsResult");
+        }
         if (requestCode == REQUEST_STREAM) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[1] == PackageManager.PERMISSION_GRANTED &&

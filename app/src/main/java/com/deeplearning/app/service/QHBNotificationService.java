@@ -15,7 +15,6 @@ import com.deeplearning.app.notification.IStatusBarNotification;
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class QHBNotificationService extends NotificationListenerService {
-
     private static final String TAG = "QHBNotificationService";
 
     private static QHBNotificationService service;
@@ -23,6 +22,9 @@ public class QHBNotificationService extends NotificationListenerService {
     @Override
     public void onCreate() {
         super.onCreate();
+        if(Config.DEBUG) {
+            Log.i(TAG, "onCreate");
+        }
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             onListenerConnected();
         }
@@ -71,8 +73,9 @@ public class QHBNotificationService extends NotificationListenerService {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             super.onListenerConnected();
         }
-
-        Log.i(TAG, "onListenerConnected");
+        if(Config.DEBUG) {
+            Log.i(TAG, " onListenerConnected");
+        }
         service = this;
         //发送广播，已经连接上了
         Intent intent = new Intent(Config.ACTION_NOTIFY_LISTENER_SERVICE_CONNECT);
@@ -82,7 +85,9 @@ public class QHBNotificationService extends NotificationListenerService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy");
+        if(Config.DEBUG) {
+            Log.i(TAG, " onDestroy");
+        }
         service = null;
         //发送广播，已经连接上了
         Intent intent = new Intent(Config.ACTION_NOTIFY_LISTENER_SERVICE_DISCONNECT);
@@ -91,6 +96,9 @@ public class QHBNotificationService extends NotificationListenerService {
 
     /** 是否启动通知栏监听*/
     public static boolean isRunning() {
+        if(Config.DEBUG) {
+            Log.d(TAG, " isRunning");
+        }
         if(service == null) {
             return false;
         }

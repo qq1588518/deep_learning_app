@@ -25,8 +25,7 @@ import java.util.List;
  * Created by qq1588518 on 17/12/01.
  */
 public class ScreenRecordListenerService extends Service {
-
-    private static final String TAG = ScreenRecordListenerService.class.getSimpleName();
+    private static final String TAG = "ScreenRecordListenerService";
 
     public static final int PENDING_REQUEST_CODE = 0x01;
     private static final int NOTIFICATION_ID = 3;

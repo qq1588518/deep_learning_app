@@ -3,14 +3,16 @@ package com.deeplearning.app.core;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.util.Log;
 
+import com.deeplearning.app.config.Config;
 import com.deeplearning.app.rtmp.RESFlvDataCollecter;
-import com.deeplearning.app.util.LogTools;
 
 /**
  * Created by qq1588518 on 17/12/01.
  */
 public class RESAudioClient {
+    private static final String TAG = "RESAudioClient";
     RESCoreParameters resCoreParameters;
     private final Object syncOp = new Object();
     private AudioRecordThread audioRecordThread;
@@ -24,10 +26,15 @@ public class RESAudioClient {
 
     public boolean prepare() {
         synchronized (syncOp) {
+            if(Config.DEBUG) {
+                Log.d(TAG, "prepare");
+            }
             resCoreParameters.audioBufferQueueNum = 5;
             softAudioCore = new RESSoftAudioCore(resCoreParameters);
             if (!softAudioCore.prepare()) {
-                LogTools.e("RESAudioClient,prepare");
+                if(Config.DEBUG) {
+                    Log.e(TAG, "not prepare");
+                }
                 return false;
             }
             resCoreParameters.audioRecoderFormat = AudioFormat.ENCODING_PCM_16BIT;
@@ -43,17 +50,23 @@ public class RESAudioClient {
 
     public boolean start(RESFlvDataCollecter flvDataCollecter) {
         synchronized (syncOp) {
+            if(Config.DEBUG) {
+                Log.d(TAG, "start");
+            }
             softAudioCore.start(flvDataCollecter);
             audioRecord.startRecording();
             audioRecordThread = new AudioRecordThread();
             audioRecordThread.start();
-            LogTools.d("RESAudioClient,start()");
+            Log.d(TAG,"RESAudioClient,start()");
             return true;
         }
     }
 
     public boolean stop() {
         synchronized (syncOp) {
+            if(Config.DEBUG) {
+                Log.d(TAG, "stop");
+            }
             audioRecordThread.quit();
             try {
                 audioRecordThread.join();
@@ -68,6 +81,9 @@ public class RESAudioClient {
 
     public boolean destroy() {
         synchronized (syncOp) {
+            if(Config.DEBUG) {
+                Log.d(TAG, "destroy");
+            }
             audioRecord.release();
             return true;
         }
@@ -84,6 +100,9 @@ public class RESAudioClient {
     }
 
     private boolean prepareAudio() {
+        if(Config.DEBUG) {
+            Log.d(TAG, "prepareAudio");
+        }
         int minBufferSize = AudioRecord.getMinBufferSize(resCoreParameters.audioRecoderSampleRate,
                 resCoreParameters.audioRecoderChannelConfig,
                 resCoreParameters.audioRecoderFormat);
@@ -94,11 +113,11 @@ public class RESAudioClient {
                 minBufferSize * 5);
         audioBuffer = new byte[resCoreParameters.audioRecoderBufferSize];
         if (AudioRecord.STATE_INITIALIZED != audioRecord.getState()) {
-            LogTools.e("audioRecord.getState()!=AudioRecord.STATE_INITIALIZED!");
+            Log.e(TAG,"audioRecord.getState()!=AudioRecord.STATE_INITIALIZED!");
             return false;
         }
         if (AudioRecord.SUCCESS != audioRecord.setPositionNotificationPeriod(resCoreParameters.audioRecoderSliceSize)) {
-            LogTools.e("AudioRecord.SUCCESS != audioRecord.setPositionNotificationPeriod(" + resCoreParameters.audioRecoderSliceSize + ")");
+            Log.e(TAG,"AudioRecord.SUCCESS != audioRecord.setPositionNotificationPeriod(" + resCoreParameters.audioRecoderSliceSize + ")");
             return false;
         }
         return true;
@@ -117,7 +136,9 @@ public class RESAudioClient {
 
         @Override
         public void run() {
-            LogTools.d("AudioRecordThread,tid=" + Thread.currentThread().getId());
+            if(Config.DEBUG) {
+                Log.d(TAG, "tid=" + Thread.currentThread().getId());
+            }
             while (isRunning) {
                 int size = audioRecord.read(audioBuffer, 0, audioBuffer.length);
                 if (isRunning && softAudioCore != null && size > 0) {

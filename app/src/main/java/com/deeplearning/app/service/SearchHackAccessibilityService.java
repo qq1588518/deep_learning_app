@@ -9,6 +9,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
  * Created by qq1588518 on 17/12/01.
  */
 public class SearchHackAccessibilityService extends BaseAccessibilityService {
+    private static final String TAG = "SearchHackAccessibilityService";
 
     private String mPackageName;
 

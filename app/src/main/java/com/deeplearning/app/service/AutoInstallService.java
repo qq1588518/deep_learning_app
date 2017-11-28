@@ -1,5 +1,6 @@
 package com.deeplearning.app.service;
 
+import android.util.Log;
 import android.accessibilityservice.AccessibilityService;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -11,7 +12,7 @@ import com.deeplearning.app.util.PrintUtils;
  * Created by qq1588518 on 17/12/01.
  */
 public class AutoInstallService extends AccessibilityService {
-
+    private static final String TAG = "AutoInstallService";
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         PrintUtils.printEvent(event);
@@ -52,12 +53,12 @@ public class AutoInstallService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
-        PrintUtils.log("onServiceConnected");
+        Log.i(TAG,"onServiceConnected");
     }
 
     @Override
     public void onInterrupt() {
-        PrintUtils.log("onInterrupt");
+        Log.i(TAG,"onInterrupt");
     }
 
 

@@ -38,14 +38,16 @@ import com.deeplearning.app.DLApplication;
  * 抢红包主界面
  */
 public class QHBMainActivity extends QHBSettingsActivity {
-
+    private static final String TAG = "QHBMainActivity";
     private Dialog mTipsDialog;
     private QHBMainFragment mMainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if(Config.DEBUG) {
+            Log.i(TAG, "onCreate");
+        }
         String version = "";
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -84,7 +86,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
                 return;
             }
             String action = intent.getAction();
-            Log.d("QHBActivity", "receive-->" + action);
+            Log.d("QHBMainActivity", "receive-->" + action);
             if(Config.ACTION_QIANGHONGBAO_SERVICE_CONNECT.equals(action)) {
                 if (mTipsDialog != null) {
                     mTipsDialog.dismiss();
@@ -109,6 +111,9 @@ public class QHBMainActivity extends QHBSettingsActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(Config.DEBUG) {
+            Log.i(TAG, "onResume");
+        }
         if(QHBAccessibilityService.isRunning()) {
             if(mTipsDialog != null) {
                 mTipsDialog.dismiss();
@@ -126,11 +131,17 @@ public class QHBMainActivity extends QHBSettingsActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if(Config.DEBUG) {
+            Log.i(TAG, "onPause");
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(Config.DEBUG) {
+            Log.i(TAG, "onDestroy");
+        }
         try {
             unregisterReceiver(qhbConnectReceiver);
         } catch (Exception e) {}
@@ -139,7 +150,9 @@ public class QHBMainActivity extends QHBSettingsActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
+        if(Config.DEBUG) {
+            Log.i(TAG, "onCreateOptionsMenu");
+        }
         MenuItem item = menu.add(0, 0, 1, R.string.open_service_button);
         item.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
 
@@ -154,6 +167,9 @@ public class QHBMainActivity extends QHBSettingsActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(Config.DEBUG) {
+            Log.i(TAG, "onOptionsItemSelected");
+        }
         switch (item.getItemId()) {
             case 0:
                 openAccessibilityServiceSettings();
@@ -173,6 +189,9 @@ public class QHBMainActivity extends QHBSettingsActivity {
 
     /** 显示免责声明的对话框*/
     public void showAgreementDialog() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "showAgreementDialog");
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         builder.setTitle(R.string.agreement_title);
@@ -197,11 +216,17 @@ public class QHBMainActivity extends QHBSettingsActivity {
 
     /** 分享*/
     public void showShareDialog() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "showShareDialog");
+        }
         DLApplication.showShare(this);
     }
 
     /** 二维码*/
     public void showQrDialog() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "showQrDialog");
+        }
         final Dialog dialog = new Dialog(this, R.style.QR_Dialog_Theme);
         View view = getLayoutInflater().inflate(R.layout.qr_dialog_layout, null);
         view.setOnClickListener(new View.OnClickListener() {
@@ -232,6 +257,9 @@ public class QHBMainActivity extends QHBSettingsActivity {
 
     /** 显示捐赠的对话框*/
     public void showDonateDialog() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "showDonateDialog");
+        }
         final Dialog dialog = new Dialog(this, R.style.QR_Dialog_Theme);
         View view = getLayoutInflater().inflate(R.layout.donate_dialog_layout, null);
         view.setOnClickListener(new View.OnClickListener() {
@@ -259,6 +287,9 @@ public class QHBMainActivity extends QHBSettingsActivity {
 
     /** 显示未开启辅助服务的对话框*/
     public void showOpenAccessibilityServiceDialog() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "showOpenAccessibilityServiceDialog");
+        }
         if(mTipsDialog != null && mTipsDialog.isShowing()) {
             return;
         }
@@ -283,6 +314,9 @@ public class QHBMainActivity extends QHBSettingsActivity {
 
     /** 打开辅助服务的设置*/
     public void openAccessibilityServiceSettings() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "openAccessibilityServiceSettings");
+        }
         try {
             Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
             startActivity(intent);
@@ -295,6 +329,9 @@ public class QHBMainActivity extends QHBSettingsActivity {
     /** 打开通知栏设置*/
     @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     public void openNotificationServiceSettings() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "openNotificationServiceSettings");
+        }
         try {
             Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
             startActivity(intent);
@@ -303,6 +340,5 @@ public class QHBMainActivity extends QHBSettingsActivity {
             e.printStackTrace();
         }
     }
-
 
 }

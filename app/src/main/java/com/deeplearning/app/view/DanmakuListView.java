@@ -9,6 +9,8 @@ import android.widget.ListView;
  * Created by qq1588518 on 17/12/01.
  */
 public class DanmakuListView extends ListView {
+    private static final String TAG = "DanmakuListView";
+
     public DanmakuListView(Context context) {
         this(context, null);
     }

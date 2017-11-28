@@ -27,7 +27,7 @@ import java.util.List;
  * Created by qq1588518 on 17/12/01.
  */
 public class ScreenFloatingWindow extends FrameLayout implements IScreenRecordFloatingWindow, View.OnClickListener {
-
+    private static final String TAG = "ScreenFloatingWindow";
     /**
      * 记录小悬浮窗的宽度
      */

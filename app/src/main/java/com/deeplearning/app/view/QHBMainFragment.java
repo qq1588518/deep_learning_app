@@ -19,6 +19,7 @@ import com.deeplearning_app.R;
  * Created by susgame on 2017/11/28.
  */
 public  class QHBMainFragment extends BaseSettingsFragment {
+    private static final String TAG = "QHBMainFragment";
 
     private SwitchPreference notificationPref;
     private boolean notificationChangeByUser = true;

@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.deeplearning.app.config.Config;
 import com.deeplearning.app.rtmp.RESFlvData;
 
 import com.deeplearning.app.IScreenRecorderAidlInterface;
@@ -27,7 +28,6 @@ import com.deeplearning.app.rtmp.RESFlvDataCollecter;
 import com.deeplearning.app.service.ScreenRecordListenerService;
 import com.deeplearning.app.task.RtmpStreamingSender;
 import com.deeplearning.app.task.ScreenRecorderThread;
-import com.deeplearning.app.util.LogTools;
 
 import com.deeplearning_app.R;
 
@@ -40,6 +40,7 @@ import java.util.concurrent.Executors;
  * Created by qq1588518 on 17/12/01.
  */
 public class ScreenRecordActivity extends Activity implements View.OnClickListener {
+    private static final String TAG = "ScreenRecordActivity";
     private static final int REQUEST_CODE = 1;
     private Button mButton;
     private EditText mRtmpAddET;
@@ -54,6 +55,9 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
     private RESCoreParameters coreParameters;
 
     public static void launchActivity(Context ctx) {
+        if(Config.DEBUG) {
+            Log.i(TAG, "launchActivity");
+        }
         Intent it = new Intent(ctx, ScreenRecordActivity.class);
         it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ctx.startActivity(it);
@@ -75,6 +79,9 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(Config.DEBUG) {
+            Log.i(TAG, "onCreate");
+        }
         setContentView(R.layout.activity_screen);
         mButton = (Button) findViewById(R.id.button);
         mRtmpAddET = (EditText) findViewById(R.id.et_rtmp_address);
@@ -84,6 +91,9 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(Config.DEBUG) {
+            Log.i(TAG, "onActivityResult");
+        }
         MediaProjection mediaProjection = mMediaProjectionManager.getMediaProjection(resultCode, data);
         if (mediaProjection == null) {
             Log.e("@@", "media projection is null");
@@ -107,7 +117,7 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
         audioClient = new RESAudioClient(coreParameters);
 
         if (!audioClient.prepare()) {
-            LogTools.d("!!!!!audioClient.prepare()failed");
+            Log.i(TAG,"!!!!!audioClient.prepare()failed");
             return;
         }
 
@@ -126,6 +136,9 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
+        if(Config.DEBUG) {
+            Log.i(TAG, "onClick");
+        }
         if (mVideoRecorder != null) {
             stopScreenRecord();
         } else {
@@ -136,6 +149,9 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(Config.DEBUG) {
+            Log.i(TAG, "onDestroy");
+        }
         if (mVideoRecorder != null) {
             stopScreenRecord();
         }
@@ -144,16 +160,25 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
+        if(Config.DEBUG) {
+            Log.i(TAG, "onResume");
+        }
         if (isRecording) stopScreenRecordService();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        if(Config.DEBUG) {
+            Log.i(TAG, "onStop");
+        }
         if (isRecording) startScreenRecordService();
     }
 
     private void startScreenRecordService() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "startScreenRecordService");
+        }
         if (mVideoRecorder != null && mVideoRecorder.getStatus()) {
             Intent runningServiceIT = new Intent(this, ScreenRecordListenerService.class);
             bindService(runningServiceIT, connection, BIND_AUTO_CREATE);
@@ -163,6 +188,9 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
     }
 
     private void startAutoSendDanmaku() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "startAutoSendDanmaku");
+        }
         ExecutorService exec = Executors.newCachedThreadPool();
         exec.execute(new Runnable() {
             @Override
@@ -191,6 +219,9 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
     }
 
     private void stopScreenRecordService() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "stopScreenRecordService");
+        }
         Intent runningServiceIT = new Intent(this, ScreenRecordListenerService.class);
         stopService(runningServiceIT);
         if (mVideoRecorder != null && mVideoRecorder.getStatus()) {
@@ -199,12 +230,18 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
     }
 
     private void createScreenCapture() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "createScreenCapture");
+        }
         isRecording = true;
         Intent captureIntent = mMediaProjectionManager.createScreenCaptureIntent();
         startActivityForResult(captureIntent, REQUEST_CODE);
     }
 
     private void stopScreenRecord() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "stopScreenRecord");
+        }
         mVideoRecorder.quit();
         mVideoRecorder = null;
         if (streamingSender != null) {
@@ -217,18 +254,6 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
             executorService = null;
         }
         mButton.setText("Restart recorder");
-    }
-
-    public static class RESAudioBuff {
-        public boolean isReadyToFill;
-        public int audioFormat = -1;
-        public byte[] buff;
-
-        public RESAudioBuff(int audioFormat, int size) {
-            isReadyToFill = true;
-            this.audioFormat = audioFormat;
-            buff = new byte[size];
-        }
     }
 
 }

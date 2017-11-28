@@ -8,7 +8,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
  * 自我防御
  */
 public class SelfDefenseAccessibilityService extends BaseAccessibilityService {
-
+    private static final String TAG = "SelfDefenseAccessibilityService";
     private String mDefenseName = "微信";
 
     @Override

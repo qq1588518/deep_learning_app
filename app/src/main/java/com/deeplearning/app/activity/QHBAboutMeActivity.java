@@ -5,23 +5,27 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.deeplearning.app.config.Config;
 import com.deeplearning_app.R;
 
 /**
  * Created by qq1588518 on 17/12/01.
  */
 public class QHBAboutMeActivity extends BaseActivity {
-
+    private static final String TAG = "QHBAboutMeActivity";
     private WebView mWebView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if(Config.DEBUG) {
+            Log.d(TAG, "onCreate");
+        }
         setContentView(R.layout.activity_about);
 
         mWebView = (WebView) findViewById(R.id.webview);
@@ -59,6 +63,9 @@ public class QHBAboutMeActivity extends BaseActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        if(Config.DEBUG) {
+            Log.d(TAG, "onSupportNavigateUp");
+        }
         finish();
         return true;
     }

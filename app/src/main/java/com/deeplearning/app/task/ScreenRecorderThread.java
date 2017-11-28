@@ -12,7 +12,6 @@ import android.view.Surface;
 import com.deeplearning.app.core.Packager;
 import com.deeplearning.app.rtmp.RESFlvData;
 import com.deeplearning.app.rtmp.RESFlvDataCollecter;
-import com.deeplearning.app.util.LogTools;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -102,18 +101,18 @@ public class ScreenRecorderThread extends Thread {
             int eobIndex = mEncoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_US);
             switch (eobIndex) {
                 case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
-                    LogTools.d("VideoSenderThread,MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED");
+                    Log.d(TAG,"VideoSenderThread,MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED");
                     break;
                 case MediaCodec.INFO_TRY_AGAIN_LATER:
 //                    LogTools.d("VideoSenderThread,MediaCodec.INFO_TRY_AGAIN_LATER");
                     break;
                 case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
-                    LogTools.d("VideoSenderThread,MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:" +
+                    Log.d(TAG,"VideoSenderThread,MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:" +
                             mEncoder.getOutputFormat().toString());
                     sendAVCDecoderConfigurationRecord(0, mEncoder.getOutputFormat());
                     break;
                 default:
-                    LogTools.d("VideoSenderThread,MediaCode,eobIndex=" + eobIndex);
+                    Log.d(TAG,"VideoSenderThread,MediaCode,eobIndex=" + eobIndex);
                     if (startTime == 0) {
                         startTime = mBufferInfo.presentationTimeUs / 1000;
                     }

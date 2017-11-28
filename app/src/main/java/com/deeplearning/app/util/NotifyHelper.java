@@ -17,7 +17,7 @@ import java.util.Calendar;
  * Created by qq1588518 on 17/12/01.
  */
 public class NotifyHelper {
-
+    private static final String TAG = "NotifyHelper";
     private static Vibrator sVibrator;
     private static KeyguardManager sKeyguardManager;
     private static PowerManager sPowerManager;

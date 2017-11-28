@@ -22,6 +22,7 @@ import android.util.Log;
  * Created by qq1588518 on 17/12/01.
  */
 public class TinyDB {
+	private static final String TAG = "TinyDB";
 	Context mContext;
 	SharedPreferences preferences;
 	String DEFAULT_APP_IMAGEDATA_DIRECTORY;

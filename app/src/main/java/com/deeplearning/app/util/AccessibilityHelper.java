@@ -12,7 +12,7 @@ import java.util.List;
  * Created by qq1588518 on 17/12/01.
  */
 public final class AccessibilityHelper {
-
+    private static final String TAG = "AccessibilityHelper";
     private AccessibilityHelper() {}
 
     /** 通过id查找*/

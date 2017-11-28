@@ -9,10 +9,11 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.deeplearning.app.rtmp.RESFlvDataCollecter;
 import com.deeplearning.app.task.AudioSenderThread;
-import com.deeplearning.app.util.LogTools;
+import com.deeplearning.app.util.PrintUtils;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by qq1588518 on 17/12/01.
  */
 public class RESSoftAudioCore {
+    private static final String TAG = "RESSoftAudioCore";
     RESCoreParameters resCoreParameters;
     private final Object syncOp = new Object();
     private MediaCodec dstAudioEncoder;
@@ -49,13 +51,13 @@ public class RESSoftAudioCore {
     public void queueAudio(byte[] rawAudioFrame) {
         int targetIndex = (lastAudioQueueBuffIndex + 1) % orignAudioBuffs.length;
         if (orignAudioBuffs[targetIndex].isReadyToFill) {
-            LogTools.d("queueAudio,accept ,targetIndex" + targetIndex);
+            Log.d(TAG,"queueAudio,accept ,targetIndex" + targetIndex);
             System.arraycopy(rawAudioFrame, 0, orignAudioBuffs[targetIndex].buff, 0, resCoreParameters.audioRecoderBufferSize);
             orignAudioBuffs[targetIndex].isReadyToFill = false;
             lastAudioQueueBuffIndex = targetIndex;
             audioFilterHandler.sendMessage(audioFilterHandler.obtainMessage(AudioFilterHandler.WHAT_INCOMING_BUFF, targetIndex, 0));
         } else {
-            LogTools.d("queueAudio,abandon,targetIndex" + targetIndex);
+            Log.d(TAG,"queueAudio,abandon,targetIndex" + targetIndex);
         }
     }
 
@@ -70,7 +72,7 @@ public class RESSoftAudioCore {
             dstAudioFormat = new MediaFormat();
             dstAudioEncoder = createAudioMediaCodec(resCoreParameters, dstAudioFormat);
             if (dstAudioEncoder == null) {
-                LogTools.e("create Audio MediaCodec failed");
+                Log.e(TAG,"create Audio MediaCodec failed");
                 return false;
             }
             //audio
@@ -105,7 +107,7 @@ public class RESSoftAudioCore {
                 audioSenderThread.start();
                 audioFilterHandler = new AudioFilterHandler(audioFilterHandlerThread.getLooper());
             } catch (Exception e) {
-                LogTools.trace("RESSoftAudioCore", e);
+                PrintUtils.trace("RESSoftAudioCore", e);
             }
         }
     }
@@ -119,7 +121,7 @@ public class RESSoftAudioCore {
                 audioSenderThread.quit();
                 audioSenderThread.join();
             } catch (InterruptedException e) {
-                LogTools.trace("RESSoftAudioCore", e);
+                PrintUtils.trace("RESSoftAudioCore", e);
             }
             dstAudioEncoder.stop();
             dstAudioEncoder.release();
@@ -136,11 +138,11 @@ public class RESSoftAudioCore {
         audioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, coreParameters.mediacodecAACChannelCount);
         audioFormat.setInteger(MediaFormat.KEY_BIT_RATE, coreParameters.mediacodecAACBitRate);
         audioFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, coreParameters.mediacodecAACMaxInputSize);
-        LogTools.d("creatingAudioEncoder,format=" + audioFormat.toString());
+        Log.d(TAG,"creatingAudioEncoder,format=" + audioFormat.toString());
         try {
             result = MediaCodec.createEncoderByType(audioFormat.getString(MediaFormat.KEY_MIME));
         } catch (Exception e) {
-            LogTools.trace("can`t create audioEncoder!", e);
+            PrintUtils.trace("can`t create audioEncoder!", e);
             return null;
         }
         return result;
@@ -216,9 +218,9 @@ public class RESSoftAudioCore {
                 dstAudioEncoderIBuffer.put(filtered?filteredAudioBuff.buff:orignAudioBuff.buff, 0, orignAudioBuff.buff.length);
                 dstAudioEncoder.queueInputBuffer(eibIndex, 0, orignAudioBuff.buff.length, nowTimeMs * 1000, 0);
             } else {
-                LogTools.d("dstAudioEncoder.dequeueInputBuffer(-1)<0");
+                Log.d(TAG,"dstAudioEncoder.dequeueInputBuffer(-1)<0");
             }
-            LogTools.d("AudioFilterHandler,ProcessTime:" + (System.currentTimeMillis() - nowTimeMs));
+            Log.d(TAG,"AudioFilterHandler,ProcessTime:" + (System.currentTimeMillis() - nowTimeMs));
         }
 
         /**
