@@ -43,7 +43,7 @@ public class QHBNotificationService extends NotificationListenerService {
         if(!getConfig().isEnableNotificationService()) {
             return;
         }
-        QiangHongBaoService.handeNotificationPosted(new IStatusBarNotification() {
+        QHBAccessibilityService.handeNotificationPosted(new IStatusBarNotification() {
             @Override
             public String getPackageName() {
                 return sbn.getPackageName();

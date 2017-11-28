@@ -3,7 +3,6 @@ package com.deeplearning.app.service;
 import android.accessibilityservice.AccessibilityService;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
-
 import java.util.List;
 
 import com.deeplearning.app.util.PrintUtils;

@@ -16,8 +16,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -31,8 +29,7 @@ import com.deeplearning.app.util.BitmapUtils;
 
 import java.io.File;
 import com.deeplearning.app.config.Config;
-import com.deeplearning.app.service.QiangHongBaoService;
-import com.deeplearning.app.view.BaseSettingsFragment;
+import com.deeplearning.app.service.QHBAccessibilityService;
 import com.deeplearning.app.view.QHBMainFragment;
 import com.deeplearning_app.R;
 import com.deeplearning.app.DLApplication;
@@ -92,13 +89,16 @@ public class QHBMainActivity extends QHBSettingsActivity {
                 if (mTipsDialog != null) {
                     mTipsDialog.dismiss();
                 }
-            } else if(Config.ACTION_QIANGHONGBAO_SERVICE_DISCONNECT.equals(action)) {
+            }
+            else if(Config.ACTION_QIANGHONGBAO_SERVICE_DISCONNECT.equals(action)) {
                 showOpenAccessibilityServiceDialog();
-            } else if(Config.ACTION_NOTIFY_LISTENER_SERVICE_CONNECT.equals(action)) {
+            }
+            else if(Config.ACTION_NOTIFY_LISTENER_SERVICE_CONNECT.equals(action)) {
                 if(mMainFragment != null) {
                     mMainFragment.updateNotifyPreference();
                 }
-            } else if(Config.ACTION_NOTIFY_LISTENER_SERVICE_DISCONNECT.equals(action)) {
+            }
+            else if(Config.ACTION_NOTIFY_LISTENER_SERVICE_DISCONNECT.equals(action)) {
                 if(mMainFragment != null) {
                     mMainFragment.updateNotifyPreference();
                 }
@@ -109,7 +109,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(QiangHongBaoService.isRunning()) {
+        if(QHBAccessibilityService.isRunning()) {
             if(mTipsDialog != null) {
                 mTipsDialog.dismiss();
             }

@@ -26,15 +26,15 @@ import com.deeplearning.app.notification.IStatusBarNotification;
  * Created by qq1588518 on 17/12/01.
  * 抢红包外挂服务
  */
-public class QiangHongBaoService extends AccessibilityService {
+public class QHBAccessibilityService extends AccessibilityService {
 
-    private static final String TAG = "QiangHongBao";
+    private static final String TAG = "QHBAccessibilityService";
 
     private static final Class[] ACCESSBILITY_JOBS= {
             WechatAccessbilityJob.class,
     };
 
-    private static QiangHongBaoService service;
+    private static QHBAccessibilityService service;
 
     private List<AccessbilityJob> mAccessbilityJobs;
     private HashMap<String, AccessbilityJob> mPkgAccessbilityJobMap;

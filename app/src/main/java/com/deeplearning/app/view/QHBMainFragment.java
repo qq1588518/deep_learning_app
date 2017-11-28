@@ -12,7 +12,7 @@ import com.deeplearning.app.activity.QHBMainActivity;
 import com.deeplearning.app.activity.QHBNotifySettingsActivity;
 import com.deeplearning.app.activity.QHBWechatSettingsActivity;
 import com.deeplearning.app.config.Config;
-import com.deeplearning.app.service.QiangHongBaoService;
+import com.deeplearning.app.service.QHBAccessibilityService;
 import com.deeplearning_app.R;
 
 /**
@@ -34,7 +34,7 @@ public  class QHBMainFragment extends BaseSettingsFragment {
         wechatPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if((Boolean) newValue && !QiangHongBaoService.isRunning()) {
+                if((Boolean) newValue && !QHBAccessibilityService.isRunning()) {
                     ((QHBMainActivity)getActivity()).showOpenAccessibilityServiceDialog();
                 }
                 return true;
@@ -59,7 +59,7 @@ public  class QHBMainFragment extends BaseSettingsFragment {
 
                 Config.getConfig(getActivity()).setNotificationServiceEnable(enalbe);
 
-                if(enalbe && !QiangHongBaoService.isNotificationServiceRunning()) {
+                if(enalbe && !QHBAccessibilityService.isNotificationServiceRunning()) {
                     ((QHBMainActivity)getActivity()).openNotificationServiceSettings();
                     return false;
                 }
@@ -115,7 +115,7 @@ public  class QHBMainFragment extends BaseSettingsFragment {
         if(notificationPref == null) {
             return;
         }
-        boolean running = QiangHongBaoService.isNotificationServiceRunning();
+        boolean running = QHBAccessibilityService.isNotificationServiceRunning();
         boolean enable = Config.getConfig(getActivity()).isEnableNotificationService();
         if( enable && running && !notificationPref.isChecked()) {
             DLApplication.eventStatistics(getActivity(), "notify_service", String.valueOf(true));

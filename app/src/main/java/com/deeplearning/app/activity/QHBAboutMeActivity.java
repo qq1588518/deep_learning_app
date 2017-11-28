@@ -9,7 +9,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.deeplearning.app.activity.BaseActivity;
 import com.deeplearning_app.R;
 
 /**

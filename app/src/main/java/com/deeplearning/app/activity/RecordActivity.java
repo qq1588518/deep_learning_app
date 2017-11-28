@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -12,9 +11,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import com.deeplearning.app.activity.BaseActivity;
-import com.deeplearning.app.activity.CameraRecordActivity;
-import com.deeplearning.app.activity.ScreenRecordActivity;
 import com.deeplearning_app.R;
 
 /**

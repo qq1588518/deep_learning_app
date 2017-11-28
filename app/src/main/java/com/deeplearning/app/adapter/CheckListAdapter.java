@@ -1,16 +1,12 @@
 package com.deeplearning.app.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import com.deeplearning_app.R;
 

@@ -1,7 +1,6 @@
 package com.deeplearning.app.rtmp;
 
 import com.deeplearning.app.core.RESCoreParameters;
-
 import java.util.ArrayList;
 
 /**
