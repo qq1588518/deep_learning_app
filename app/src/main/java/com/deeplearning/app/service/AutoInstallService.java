@@ -11,7 +11,7 @@ import com.deeplearning.app.util.PrintUtils;
 /**
  * Created by qq1588518 on 17/12/01.
  */
-public class AutoInstallService extends AccessibilityService {
+public class AutoInstallService extends BaseAccessibilityService {
     private static final String TAG = "AutoInstallService";
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {

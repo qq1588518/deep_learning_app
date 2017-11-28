@@ -26,7 +26,7 @@ import com.deeplearning.app.notification.IStatusBarNotification;
  * Created by qq1588518 on 17/12/01.
  * 抢红包外挂服务
  */
-public class QHBAccessibilityService extends AccessibilityService {
+public class QHBAccessibilityService extends BaseAccessibilityService {
     private static final String TAG = "QHBAccessibilityService";
 
     private static final Class[] ACCESSBILITY_JOBS= {

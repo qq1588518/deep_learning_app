@@ -16,7 +16,7 @@
     <string name="tv_bottom_tag">Powered by DeepLearningApp</string>
     <string name="click_auto">辅助点击广告</string>
     <string name="clean">Clean Process</string>
-    <string name="demo">Demo</string>
+    <string name="search">Search Application</string>
     <string name="reply">Auto Reply</string>
     <string name="install">Auto Install</string>
     <string name="defense">Self Defense</string>
@@ -63,5 +63,9 @@
     <string name="description_info">Info</string>
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+
+    <string name="auto_reply_accessibility_description">微信自动回复服务</string>
+    <string name="base_accessibility_description">基础辅助功能服务</string>
+    <string name="auto_install_accessibility_description">自动安装更新服务</string>
 
 </resources>

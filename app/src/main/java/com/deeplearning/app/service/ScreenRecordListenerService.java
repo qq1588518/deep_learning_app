@@ -86,7 +86,6 @@ public class ScreenRecordListenerService extends Service {
 
         @Override
         public void sendDanmaku(List<DanmakuBean> danmakuBean) throws RemoteException {
-            Log.e(TAG, "danmaku msg = " + danmakuBean.get(0).getMessage());
             if (ScreenRecordWindowManager.isWindowShowing()) {
                 ScreenRecordWindowManager.getSmallWindow().setDataToList(danmakuBean);
             }
