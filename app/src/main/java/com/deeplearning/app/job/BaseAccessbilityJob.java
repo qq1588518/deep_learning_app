@@ -3,17 +3,17 @@ package com.deeplearning.app.job;
 import android.content.Context;
 
 import com.deeplearning.app.config.Config;
-import com.deeplearning.app.service.QHBAccessibilityService;
+import com.deeplearning.app.service.BaseAccessibilityService;
 
 /**
  * Created by qq1588518 on 17/12/01.
  */
 public abstract class BaseAccessbilityJob implements AccessbilityJob {
 
-    private QHBAccessibilityService service;
+    private BaseAccessibilityService service;
 
     @Override
-    public void onCreateJob(QHBAccessibilityService service) {
+    public void onCreateJob(BaseAccessibilityService service) {
         this.service = service;
     }
 
@@ -25,7 +25,7 @@ public abstract class BaseAccessbilityJob implements AccessbilityJob {
         return service.getConfig();
     }
 
-    public QHBAccessibilityService getService() {
+    public BaseAccessibilityService getService() {
         return service;
     }
 }

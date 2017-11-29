@@ -50,16 +50,4 @@ public class AutoInstallService extends BaseAccessibilityService {
         }
     }
 
-    @Override
-    protected void onServiceConnected() {
-        super.onServiceConnected();
-        Log.i(TAG,"onServiceConnected");
-    }
-
-    @Override
-    public void onInterrupt() {
-        Log.i(TAG,"onInterrupt");
-    }
-
-
 }

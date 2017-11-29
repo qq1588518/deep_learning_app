@@ -13,22 +13,32 @@ import android.provider.Settings;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.util.Log;
+import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+
+import com.deeplearning.app.config.Config;
+import com.deeplearning.app.job.AccessbilityJob;
+import com.deeplearning.app.job.WechatAccessbilityJob;
+import com.deeplearning.app.notification.IStatusBarNotification;
 
 /**
  * Created by qq1588518 on 17/12/01.
  */
 public class BaseAccessibilityService extends AccessibilityService {
-    private static final String TAG = "BaseAccessibilityService";
-    private AccessibilityManager mAccessibilityManager;
-    private Context mContext;
+    private static final String TAG = "BaseAccessibility";
     private static BaseAccessibilityService mInstance;
+    private List<AccessbilityJob> mAccessbilityJobs;
+    private HashMap<String, AccessbilityJob> mPkgAccessbilityJobMap;
+    private boolean isConnect = false;
 
-    public void init(Context context) {
-        mContext = context.getApplicationContext();
-        mAccessibilityManager = (AccessibilityManager) mContext.getSystemService(Context.ACCESSIBILITY_SERVICE);
-    }
+    private static final Class[] ACCESSBILITY_JOBS= {
+            WechatAccessbilityJob.class,
+    };
 
     public static BaseAccessibilityService getInstance() {
         if (mInstance == null) {
@@ -37,30 +47,151 @@ public class BaseAccessibilityService extends AccessibilityService {
         return mInstance;
     }
 
-    /**
-     * Check当前辅助服务是否启用
-     *
-     * @param serviceName serviceName
-     * @return 是否启用
-     */
-    private boolean checkAccessibilityEnabled(String serviceName) {
-        List<AccessibilityServiceInfo> accessibilityServices =
-                mAccessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
-        for (AccessibilityServiceInfo info : accessibilityServices) {
-            if (info.getId().equals(serviceName)) {
-                return true;
+    public Config getConfig() {
+        return Config.getConfig(this);
+    }
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        if(Config.DEBUG) {
+            Log.d(TAG, " onCreate");
+        }
+        mAccessbilityJobs = new ArrayList<>();
+        mPkgAccessbilityJobMap = new HashMap<>();
+
+        //初始化辅助插件工作
+        for(Class clazz : ACCESSBILITY_JOBS) {
+            try {
+                Object object = clazz.newInstance();
+                if(object instanceof AccessbilityJob) {
+                    AccessbilityJob job = (AccessbilityJob) object;
+                    job.onCreateJob(this);
+                    mAccessbilityJobs.add(job);
+                    mPkgAccessbilityJobMap.put(job.getTargetPackageName(), job);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(Config.DEBUG) {
+            Log.d(TAG, " onDestroy");
+        }
+        if(mPkgAccessbilityJobMap != null) {
+            mPkgAccessbilityJobMap.clear();
+        }
+        if(mAccessbilityJobs != null && !mAccessbilityJobs.isEmpty()) {
+            for (AccessbilityJob job : mAccessbilityJobs) {
+                job.onStopJob();
+            }
+            mAccessbilityJobs.clear();
+        }
+
+        isConnect = false;
+        mAccessbilityJobs = null;
+        mPkgAccessbilityJobMap = null;
+        //发送广播，已经断开辅助服务
+        Intent intent = new Intent(com.deeplearning.app.config.Config.ACTION_QIANGHONGBAO_SERVICE_DISCONNECT);
+        sendBroadcast(intent);
+    }
+
+    @Override
+    public void onInterrupt() {
+        if(Config.DEBUG) {
+            Log.d(TAG, " onInterrupt");
+        }
+        Toast.makeText(this, "中断抢红包服务", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onServiceConnected() {
+        super.onServiceConnected();
+        if(Config.DEBUG) {
+            Log.d(TAG, " onServiceConnected");
+        }
+        isConnect = true;
+        //发送广播，已经连接上了
+        Intent intent = new Intent(com.deeplearning.app.config.Config.ACTION_QIANGHONGBAO_SERVICE_CONNECT);
+        sendBroadcast(intent);
+        Toast.makeText(this, "已连接抢红包服务", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAccessibilityEvent(AccessibilityEvent event) {
+        if(Config.DEBUG) {
+            Log.d(TAG, " onAccessibilityEvent 事件--->" + event );
+        }
+        String pkn = String.valueOf(event.getPackageName());
+        if(mAccessbilityJobs != null && !mAccessbilityJobs.isEmpty()) {
+            if(!getConfig().isAgreement()) {
+                return;
+            }
+            for (AccessbilityJob job : mAccessbilityJobs) {
+                if(pkn.equals(job.getTargetPackageName()) && job.isEnable()) {
+                    job.onReceiveJob(event);
+                }
+            }
+        }
+    }
+
+
+    /** 接收通知栏事件*/
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public static void handeNotificationPosted(IStatusBarNotification notificationService) {
+        if(notificationService == null) {
+            return;
+        }
+        if(mInstance == null || mInstance.mPkgAccessbilityJobMap == null) {
+            return;
+        }
+        if(Config.DEBUG) {
+            Log.d(TAG, " handeNotificationPosted 事件--->" + notificationService.getPackageName() );
+        }
+        String pack = notificationService.getPackageName();
+        AccessbilityJob job = mInstance.mPkgAccessbilityJobMap.get(pack);
+        if(job == null) {
+            return;
+        }
+        job.onNotificationPosted(notificationService);
     }
 
     /**
-     * 前往开启辅助服务界面
-     */
-    public void goAccess() {
-        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(intent);
+     * 判断当前服务是否启用
+     * */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static boolean isEnabled() {
+        if(Config.DEBUG) {
+            Log.d(TAG, " isEnabled");
+        }
+        if((mInstance == null)||(mInstance.isConnect == false)){
+            return false;
+        }
+        AccessibilityManager accessibilityManager = (AccessibilityManager) mInstance.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        AccessibilityServiceInfo info = mInstance.getServiceInfo();
+        if(info == null) {
+            return false;
+        }
+        List<AccessibilityServiceInfo> list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
+        Iterator<AccessibilityServiceInfo> iterator = list.iterator();
+
+        boolean connect = false;
+        while (iterator.hasNext()) {
+            AccessibilityServiceInfo i = iterator.next();
+            if(i.getId().equals(info.getId())) {
+                connect = true;
+                break;
+            }
+        }
+        if(!connect) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -226,11 +357,4 @@ public class BaseAccessibilityService extends AccessibilityService {
         }
     }
 
-    @Override
-    public void onAccessibilityEvent(AccessibilityEvent event) {
-    }
-
-    @Override
-    public void onInterrupt() {
-    }
 }

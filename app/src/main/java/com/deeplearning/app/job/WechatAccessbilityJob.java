@@ -19,7 +19,8 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.notification.IStatusBarNotification;
-import com.deeplearning.app.service.QHBAccessibilityService;
+import com.deeplearning.app.service.BaseAccessibilityService;
+import com.deeplearning.app.service.BaseNotificationService;
 import com.deeplearning.app.util.AccessibilityHelper;
 import com.deeplearning.app.util.NotifyHelper;
 import com.deeplearning.app.DLApplication;
@@ -65,7 +66,7 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
     };
 
     @Override
-    public void onCreateJob(QHBAccessibilityService service) {
+    public void onCreateJob(BaseAccessibilityService service) {
         super.onCreateJob(service);
 
         updatePackageInfo();
@@ -113,7 +114,7 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
             if(data == null || !(data instanceof Notification)) {
                 return;
             }
-            if(QHBAccessibilityService.isNotificationServiceRunning() && getConfig().isEnableNotificationService()) { //开启快速模式，不处理
+            if(BaseNotificationService.isNotificationServiceRunning() && getConfig().isEnableNotificationService()) { //开启快速模式，不处理
                 return;
             }
             List<CharSequence> texts = event.getText();

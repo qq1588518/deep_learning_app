@@ -14,10 +14,10 @@ import com.deeplearning.app.notification.IStatusBarNotification;
  * Created by qq1588518 on 17/12/01.
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-public class QHBNotificationService extends NotificationListenerService {
-    private static final String TAG = "QHBNotificationService";
+public class BaseNotificationService extends NotificationListenerService {
+    private static final String TAG = "NotificationService";
 
-    private static QHBNotificationService service;
+    private static BaseNotificationService service;
 
     @Override
     public void onCreate() {
@@ -45,7 +45,7 @@ public class QHBNotificationService extends NotificationListenerService {
         if(!getConfig().isEnableNotificationService()) {
             return;
         }
-        QHBAccessibilityService.handeNotificationPosted(new IStatusBarNotification() {
+        BaseAccessibilityService.handeNotificationPosted(new IStatusBarNotification() {
             @Override
             public String getPackageName() {
                 return sbn.getPackageName();
@@ -95,13 +95,28 @@ public class QHBNotificationService extends NotificationListenerService {
     }
 
     /** 是否启动通知栏监听*/
-    public static boolean isRunning() {
+    public static boolean isEnabled() {
         if(Config.DEBUG) {
-            Log.d(TAG, " isRunning");
+            Log.d(TAG, " isEnabled");
         }
         if(service == null) {
             return false;
         }
         return true;
+    }
+
+    /** 快速读取通知栏服务是否启动*/
+    public static boolean isNotificationServiceRunning() {
+        if(Config.DEBUG) {
+            Log.d(TAG, " isNotificationServiceRunning");
+        }
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return false;
+        }
+        //部份手机没有NotificationService服务
+        try {
+            return BaseNotificationService.isEnabled();
+        } catch (Throwable t) {}
+        return false;
     }
 }

@@ -12,7 +12,7 @@ import com.deeplearning_app.R;
 /**
  * Created by qq1588518 on 17/12/01.
  */
-public class QHBNotifySettingsActivity extends QHBSettingsActivity {
+public class NotifySettingsActivity extends SettingsActivity {
     private static final String TAG = "NotifySettingsFragment";
     @Override
     public Fragment getSettingsFragment() {

@@ -8,18 +8,19 @@ import android.preference.SwitchPreference;
 import android.widget.Toast;
 
 import com.deeplearning.app.DLApplication;
-import com.deeplearning.app.activity.QHBMainActivity;
-import com.deeplearning.app.activity.QHBNotifySettingsActivity;
-import com.deeplearning.app.activity.QHBWechatSettingsActivity;
+import com.deeplearning.app.activity.MainActivity;
+import com.deeplearning.app.activity.NotifySettingsActivity;
+import com.deeplearning.app.activity.WechatSettingsActivity;
 import com.deeplearning.app.config.Config;
-import com.deeplearning.app.service.QHBAccessibilityService;
+import com.deeplearning.app.service.BaseAccessibilityService;
+import com.deeplearning.app.service.BaseNotificationService;
 import com.deeplearning_app.R;
 
 /**
  * Created by susgame on 2017/11/28.
  */
-public  class QHBMainFragment extends BaseSettingsFragment {
-    private static final String TAG = "QHBMainFragment";
+public  class MainFragment extends BaseSettingsFragment {
+    private static final String TAG = "MainFragment";
 
     private SwitchPreference notificationPref;
     private boolean notificationChangeByUser = true;
@@ -35,8 +36,8 @@ public  class QHBMainFragment extends BaseSettingsFragment {
         wechatPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if((Boolean) newValue && !QHBAccessibilityService.isRunning()) {
-                    ((QHBMainActivity)getActivity()).showOpenAccessibilityServiceDialog();
+                if((Boolean) newValue && !BaseAccessibilityService.isEnabled()) {
+                    ((MainActivity)getActivity()).showOpenAccessibilityServiceDialog();
                 }
                 return true;
             }
@@ -60,8 +61,8 @@ public  class QHBMainFragment extends BaseSettingsFragment {
 
                 Config.getConfig(getActivity()).setNotificationServiceEnable(enalbe);
 
-                if(enalbe && !QHBAccessibilityService.isNotificationServiceRunning()) {
-                    ((QHBMainActivity)getActivity()).openNotificationServiceSettings();
+                if(enalbe && !BaseNotificationService.isNotificationServiceRunning()) {
+                    ((MainActivity)getActivity()).openNotificationServiceSettings();
                     return false;
                 }
                 DLApplication.eventStatistics(getActivity(), "notify_service", String.valueOf(newValue));
@@ -74,7 +75,7 @@ public  class QHBMainFragment extends BaseSettingsFragment {
             preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    ((QHBMainActivity) getActivity()).showQrDialog();
+                    ((MainActivity) getActivity()).showQrDialog();
                     DLApplication.eventStatistics(getActivity(), "about_author");
                     return true;
                 }
@@ -86,7 +87,7 @@ public  class QHBMainFragment extends BaseSettingsFragment {
             preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    ((QHBMainActivity) getActivity()).showDonateDialog();
+                    ((MainActivity) getActivity()).showDonateDialog();
                     DLApplication.eventStatistics(getActivity(), "donate");
                     return true;
                 }
@@ -96,7 +97,7 @@ public  class QHBMainFragment extends BaseSettingsFragment {
         findPreference("WECHAT_SETTINGS").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(getActivity(), QHBWechatSettingsActivity.class));
+                startActivity(new Intent(getActivity(), WechatSettingsActivity.class));
                 return true;
             }
         });
@@ -104,7 +105,7 @@ public  class QHBMainFragment extends BaseSettingsFragment {
         findPreference("NOTIFY_SETTINGS").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(getActivity(), QHBNotifySettingsActivity.class));
+                startActivity(new Intent(getActivity(), NotifySettingsActivity.class));
                 return true;
             }
         });
@@ -116,7 +117,7 @@ public  class QHBMainFragment extends BaseSettingsFragment {
         if(notificationPref == null) {
             return;
         }
-        boolean running = QHBAccessibilityService.isNotificationServiceRunning();
+        boolean running = BaseNotificationService.isNotificationServiceRunning();
         boolean enable = Config.getConfig(getActivity()).isEnableNotificationService();
         if( enable && running && !notificationPref.isChecked()) {
             DLApplication.eventStatistics(getActivity(), "notify_service", String.valueOf(true));

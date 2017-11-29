@@ -29,18 +29,18 @@ import com.deeplearning.app.util.BitmapUtils;
 
 import java.io.File;
 import com.deeplearning.app.config.Config;
-import com.deeplearning.app.service.QHBAccessibilityService;
-import com.deeplearning.app.view.QHBMainFragment;
+import com.deeplearning.app.service.BaseAccessibilityService;
+import com.deeplearning.app.view.MainFragment;
 import com.deeplearning_app.R;
 import com.deeplearning.app.DLApplication;
 /**
  * Created by qq1588518 on 17/12/01.
  * 抢红包主界面
  */
-public class QHBMainActivity extends QHBSettingsActivity {
-    private static final String TAG = "QHBMainActivity";
+public class MainActivity extends SettingsActivity {
+    private static final String TAG = "MainActivity";
     private Dialog mTipsDialog;
-    private QHBMainFragment mMainFragment;
+    private MainFragment mMainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
 
     @Override
     public Fragment getSettingsFragment() {
-        mMainFragment = new QHBMainFragment();
+        mMainFragment = new MainFragment();
         return mMainFragment;
     }
 
@@ -86,7 +86,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
                 return;
             }
             String action = intent.getAction();
-            Log.d("QHBMainActivity", "receive-->" + action);
+            Log.d("MainActivity", "receive-->" + action);
             if(Config.ACTION_QIANGHONGBAO_SERVICE_CONNECT.equals(action)) {
                 if (mTipsDialog != null) {
                     mTipsDialog.dismiss();
@@ -114,7 +114,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
         if(Config.DEBUG) {
             Log.i(TAG, "onResume");
         }
-        if(QHBAccessibilityService.isRunning()) {
+        if(BaseAccessibilityService.isEnabled()) {
             if(mTipsDialog != null) {
                 mTipsDialog.dismiss();
             }
@@ -180,7 +180,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
                 DLApplication.eventStatistics(this, "menu_notify");
                 break;
             case 4:
-                startActivity(new Intent(this, QHBAboutMeActivity.class));
+                startActivity(new Intent(this, AboutMeActivity.class));
                 DLApplication.eventStatistics(this, "menu_about");
                 break;
         }
@@ -200,14 +200,14 @@ public class QHBMainActivity extends QHBSettingsActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Config.getConfig(getApplicationContext()).setAgreement(true);
-                DLApplication.eventStatistics(QHBMainActivity.this, "agreement", "true");
+                DLApplication.eventStatistics(MainActivity.this, "agreement", "true");
             }
         });
         builder.setNegativeButton("不同意", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Config.getConfig(getApplicationContext()).setAgreement(false);
-                DLApplication.eventStatistics(QHBMainActivity.this, "agreement", "false");
+                DLApplication.eventStatistics(MainActivity.this, "agreement", "false");
                 finish();
             }
         });
@@ -247,7 +247,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
                 }
 
                 Toast.makeText(getApplicationContext(), "已复制到粘贴板", Toast.LENGTH_LONG).show();
-                DLApplication.eventStatistics(QHBMainActivity.this, "copy_qr");
+                DLApplication.eventStatistics(MainActivity.this, "copy_qr");
                 dialog.dismiss();
             }
         });
@@ -275,9 +275,9 @@ public class QHBMainActivity extends QHBSettingsActivity {
                 File output = new File(android.os.Environment.getExternalStorageDirectory(), "codeboy_wechatpay_qr.jpg");
                 if(!output.exists()) {
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wechatpay_qr);
-                    BitmapUtils.saveBitmap(QHBMainActivity.this, output, bitmap);
+                    BitmapUtils.saveBitmap(MainActivity.this, output, bitmap);
                 }
-                Toast.makeText(QHBMainActivity.this, "已保存到:" + output.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "已保存到:" + output.getAbsolutePath(), Toast.LENGTH_LONG).show();
                 return true;
             }
         });
@@ -312,7 +312,7 @@ public class QHBMainActivity extends QHBSettingsActivity {
         mTipsDialog = builder.show();
     }
 
-    /** 打开辅助服务的设置*/
+    /** 前往开启辅助服务的设置界面*/
     public void openAccessibilityServiceSettings() {
         if(Config.DEBUG) {
             Log.i(TAG, "openAccessibilityServiceSettings");

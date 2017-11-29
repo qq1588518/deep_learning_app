@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import java.io.File;
 
+import com.deeplearning.app.DLApplication;
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.service.BaseAccessibilityService;
 import com.deeplearning_app.R;
@@ -29,16 +30,20 @@ public class AutoInstallActivity extends BaseActivity {
             Log.d(TAG, "onCreate");
         }
         setContentView(R.layout.activity_main);
-        BaseAccessibilityService.getInstance().init(this);
         mPackageManager = this.getPackageManager();
-        mPackages = new String[]{"com.hujiang.studytool"};
+        mPackages = new String[]{"com.tencent.mm"};
     }
 
+    /**
+     * 前往开启辅助服务界面
+     */
     public void goAccess(View view) {
         if(Config.DEBUG) {
             Log.d(TAG, "goAccess");
         }
-        BaseAccessibilityService.getInstance().goAccess();
+        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     public void goApp(View view) {

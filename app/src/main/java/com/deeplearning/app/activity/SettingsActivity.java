@@ -12,8 +12,8 @@ import com.deeplearning_app.R;
 /**
  * Created by qq1588518 on 17/12/01.
  */
-public abstract class QHBSettingsActivity extends BaseActivity {
-    private static final String TAG = "QHBSettingsActivity";
+public abstract class SettingsActivity extends BaseActivity {
+    private static final String TAG = "SettingsActivity";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

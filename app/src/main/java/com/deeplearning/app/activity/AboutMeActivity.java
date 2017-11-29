@@ -16,8 +16,8 @@ import com.deeplearning_app.R;
 /**
  * Created by qq1588518 on 17/12/01.
  */
-public class QHBAboutMeActivity extends BaseActivity {
-    private static final String TAG = "QHBAboutMeActivity";
+public class AboutMeActivity extends BaseActivity {
+    private static final String TAG = "AboutMeActivity";
     private WebView mWebView;
 
     @Override

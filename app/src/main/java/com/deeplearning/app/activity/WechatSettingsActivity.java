@@ -15,8 +15,8 @@ import com.deeplearning_app.R;
 /**
  * Created by qq1588518 on 17/12/01.
  */
-public class QHBWechatSettingsActivity extends QHBSettingsActivity {
-    private static final String TAG = "QHBWechatSettingsActivity";
+public class WechatSettingsActivity extends SettingsActivity {
+    private static final String TAG = "WechatSettingsActivity";
     @Override
     public Fragment getSettingsFragment() {
         return new WechatSettingsFragment();
