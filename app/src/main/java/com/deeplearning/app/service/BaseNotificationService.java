@@ -17,21 +17,23 @@ import com.deeplearning.app.notification.IStatusBarNotification;
 public class BaseNotificationService extends NotificationListenerService {
     private static final String TAG = "NotificationService";
 
-    private static BaseNotificationService service;
+    private static BaseNotificationService mInstance;
+    private boolean isConnect = false;
+
+    private Config getConfig() {
+        return Config.getConfig(this);
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mInstance = this;
         if(Config.DEBUG) {
             Log.i(TAG, "onCreate");
         }
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             onListenerConnected();
         }
-    }
-
-    private Config getConfig() {
-        return Config.getConfig(this);
     }
 
     @Override
@@ -76,7 +78,7 @@ public class BaseNotificationService extends NotificationListenerService {
         if(Config.DEBUG) {
             Log.i(TAG, " onListenerConnected");
         }
-        service = this;
+        isConnect = true;
         //发送广播，已经连接上了
         Intent intent = new Intent(Config.ACTION_NOTIFY_LISTENER_SERVICE_CONNECT);
         sendBroadcast(intent);
@@ -88,7 +90,8 @@ public class BaseNotificationService extends NotificationListenerService {
         if(Config.DEBUG) {
             Log.i(TAG, " onDestroy");
         }
-        service = null;
+        isConnect = false;
+        mInstance = null;
         //发送广播，已经连接上了
         Intent intent = new Intent(Config.ACTION_NOTIFY_LISTENER_SERVICE_DISCONNECT);
         sendBroadcast(intent);
@@ -99,24 +102,10 @@ public class BaseNotificationService extends NotificationListenerService {
         if(Config.DEBUG) {
             Log.d(TAG, " isEnabled");
         }
-        if(service == null) {
+        if((mInstance == null)||(mInstance.isConnect == false)){
             return false;
         }
         return true;
     }
 
-    /** 快速读取通知栏服务是否启动*/
-    public static boolean isNotificationServiceRunning() {
-        if(Config.DEBUG) {
-            Log.d(TAG, " isNotificationServiceRunning");
-        }
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            return false;
-        }
-        //部份手机没有NotificationService服务
-        try {
-            return BaseNotificationService.isEnabled();
-        } catch (Throwable t) {}
-        return false;
-    }
 }

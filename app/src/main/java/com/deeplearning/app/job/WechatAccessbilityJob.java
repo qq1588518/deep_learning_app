@@ -114,7 +114,7 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
             if(data == null || !(data instanceof Notification)) {
                 return;
             }
-            if(BaseNotificationService.isNotificationServiceRunning() && getConfig().isEnableNotificationService()) { //开启快速模式，不处理
+            if(BaseAccessibilityService.isNotificationServiceRunning() && getConfig().isEnableNotificationService()) { //开启快速模式，不处理
                 return;
             }
             List<CharSequence> texts = event.getText();

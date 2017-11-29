@@ -61,7 +61,7 @@ public  class MainFragment extends BaseSettingsFragment {
 
                 Config.getConfig(getActivity()).setNotificationServiceEnable(enalbe);
 
-                if(enalbe && !BaseNotificationService.isNotificationServiceRunning()) {
+                if(enalbe && !BaseAccessibilityService.isNotificationServiceRunning()) {
                     ((MainActivity)getActivity()).openNotificationServiceSettings();
                     return false;
                 }
@@ -117,7 +117,7 @@ public  class MainFragment extends BaseSettingsFragment {
         if(notificationPref == null) {
             return;
         }
-        boolean running = BaseNotificationService.isNotificationServiceRunning();
+        boolean running = BaseAccessibilityService.isNotificationServiceRunning();
         boolean enable = Config.getConfig(getActivity()).isEnableNotificationService();
         if( enable && running && !notificationPref.isChecked()) {
             DLApplication.eventStatistics(getActivity(), "notify_service", String.valueOf(true));

@@ -30,7 +30,7 @@ import com.deeplearning.app.notification.IStatusBarNotification;
  * Created by qq1588518 on 17/12/01.
  */
 public class BaseAccessibilityService extends AccessibilityService {
-    private static final String TAG = "BaseAccessibility";
+    private static final String TAG = "AccessibilityService";
     private static BaseAccessibilityService mInstance;
     private List<AccessbilityJob> mAccessbilityJobs;
     private HashMap<String, AccessbilityJob> mPkgAccessbilityJobMap;
@@ -51,13 +51,13 @@ public class BaseAccessibilityService extends AccessibilityService {
         return Config.getConfig(this);
     }
 
-
     @Override
     public void onCreate() {
         super.onCreate();
         if(Config.DEBUG) {
             Log.d(TAG, " onCreate");
         }
+        mInstance = this;
         mAccessbilityJobs = new ArrayList<>();
         mPkgAccessbilityJobMap = new HashMap<>();
 
@@ -96,6 +96,7 @@ public class BaseAccessibilityService extends AccessibilityService {
         isConnect = false;
         mAccessbilityJobs = null;
         mPkgAccessbilityJobMap = null;
+        mInstance = null;
         //发送广播，已经断开辅助服务
         Intent intent = new Intent(com.deeplearning.app.config.Config.ACTION_QIANGHONGBAO_SERVICE_DISCONNECT);
         sendBroadcast(intent);
@@ -194,6 +195,20 @@ public class BaseAccessibilityService extends AccessibilityService {
         return true;
     }
 
+    /** 快速读取通知栏服务是否启动*/
+    public static boolean isNotificationServiceRunning() {
+        if(Config.DEBUG) {
+            Log.d(TAG, " isNotificationServiceRunning");
+        }
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return false;
+        }
+        //部份手机没有NotificationService服务
+        try {
+            return BaseNotificationService.isEnabled();
+        } catch (Throwable t) {}
+        return false;
+    }
     /**
      * 模拟点击事件
      *
