@@ -31,6 +31,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name="com.deeplearning.app.activity.MainActivity"
@@ -60,12 +61,15 @@
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name="com.deeplearning.app.activity.AboutMeActivity"
+            android:theme="@style/Base.Theme.AppCompat"
             android:label="@string/about_title" />
         <activity
             android:name="com.deeplearning.app.activity.NotifySettingsActivity"
+            android:theme="@style/Base.Theme.AppCompat"
             android:label="@string/notify_settings" />
         <activity
             android:name="com.deeplearning.app.activity.WechatSettingsActivity"
+            android:theme="@style/Base.Theme.AppCompat"
             android:label="@string/wechat_settings" />
         <activity
             android:name="com.deeplearning.app.activity.RecordActivity"

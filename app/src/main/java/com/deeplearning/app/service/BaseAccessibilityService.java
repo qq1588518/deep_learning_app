@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -67,7 +66,7 @@ public class BaseAccessibilityService extends AccessibilityService {
                 Object object = clazz.newInstance();
                 if(object instanceof AccessbilityJob) {
                     AccessbilityJob job = (AccessbilityJob) object;
-                    job.onCreateJob(this);
+                    job.onCreateJob(mInstance);
                     mAccessbilityJobs.add(job);
                     mPkgAccessbilityJobMap.put(job.getTargetPackageName(), job);
                 }

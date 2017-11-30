@@ -8,10 +8,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import java.util.Calendar;
 
 import com.deeplearning.app.config.Config;
-
-import java.util.Calendar;
 
 /**
  * Created by qq1588518 on 17/12/01.

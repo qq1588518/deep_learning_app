@@ -1,4 +1,4 @@
-package com.deeplearning.app.view;
+package com.deeplearning.app.fragment;
 
 import android.content.Intent;
 import android.os.Build;
@@ -6,25 +6,34 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.widget.Toast;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.deeplearning.app.DLApplication;
-import com.deeplearning.app.activity.MainActivity;
+import com.deeplearning.app.activity.GrapRedEnvelopeActivity;
 import com.deeplearning.app.activity.NotifySettingsActivity;
 import com.deeplearning.app.activity.WechatSettingsActivity;
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.service.BaseAccessibilityService;
-import com.deeplearning.app.service.BaseNotificationService;
+import com.deeplearning.app.DLApplication;
 import com.deeplearning_app.R;
 
 /**
- * Created by susgame on 2017/11/28.
+ * User:Shine
+ * Date:2015-10-20
+ * Description:
  */
-public  class MainFragment extends BaseSettingsFragment {
-    private static final String TAG = "MainFragment";
-
+public class GrapRedEnvelopeFragment extends BaseRefreshFragment {
+    private static final String TAG = "GrapRedEnvelopeFragment";
     private SwitchPreference notificationPref;
     private boolean notificationChangeByUser = true;
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +46,7 @@ public  class MainFragment extends BaseSettingsFragment {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if((Boolean) newValue && !BaseAccessibilityService.isEnabled()) {
-                    ((MainActivity)getActivity()).showOpenAccessibilityServiceDialog();
+                    ((GrapRedEnvelopeActivity)getActivity()).showOpenAccessibilityServiceDialog();
                 }
                 return true;
             }
@@ -62,7 +71,7 @@ public  class MainFragment extends BaseSettingsFragment {
                 Config.getConfig(getActivity()).setNotificationServiceEnable(enalbe);
 
                 if(enalbe && !BaseAccessibilityService.isNotificationServiceRunning()) {
-                    ((MainActivity)getActivity()).openNotificationServiceSettings();
+                    ((GrapRedEnvelopeActivity)getActivity()).openNotificationServiceSettings();
                     return false;
                 }
                 DLApplication.eventStatistics(getActivity(), "notify_service", String.valueOf(newValue));
@@ -75,7 +84,7 @@ public  class MainFragment extends BaseSettingsFragment {
             preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    ((MainActivity) getActivity()).showQrDialog();
+                    ((GrapRedEnvelopeActivity) getActivity()).showQrDialog();
                     DLApplication.eventStatistics(getActivity(), "about_author");
                     return true;
                 }
@@ -87,7 +96,7 @@ public  class MainFragment extends BaseSettingsFragment {
             preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    ((MainActivity) getActivity()).showDonateDialog();
+                    ((GrapRedEnvelopeActivity) getActivity()).showDonateDialog();
                     DLApplication.eventStatistics(getActivity(), "donate");
                     return true;
                 }

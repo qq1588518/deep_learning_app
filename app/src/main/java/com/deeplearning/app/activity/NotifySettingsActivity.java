@@ -6,9 +6,10 @@ import android.preference.Preference;
 import android.util.Log;
 
 import com.deeplearning.app.config.Config;
-import com.deeplearning.app.view.BaseSettingsFragment;
 import com.deeplearning.app.DLApplication;
+import com.deeplearning.app.fragment.BaseRefreshFragment;
 import com.deeplearning_app.R;
+
 /**
  * Created by qq1588518 on 17/12/01.
  */
@@ -19,7 +20,7 @@ public class NotifySettingsActivity extends SettingsActivity {
         return new NotifySettingsFragment();
     }
 
-    public static class NotifySettingsFragment extends BaseSettingsFragment {
+    public static class NotifySettingsFragment extends BaseRefreshFragment {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {

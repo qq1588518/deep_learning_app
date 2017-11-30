@@ -9,17 +9,15 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+
+import java.util.List;
 
 import com.deeplearning.app.activity.ScreenRecordActivity;
 import com.deeplearning.app.model.DanmakuBean;
 import com.deeplearning.app.manager.ScreenRecordWindowManager;
-
 import com.deeplearning.app.IScreenRecorderAidlInterface;
-
 import com.deeplearning_app.R;
 
-import java.util.List;
 
 /**
  * Created by qq1588518 on 17/12/01.

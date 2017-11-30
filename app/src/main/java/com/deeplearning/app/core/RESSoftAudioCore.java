@@ -11,14 +11,14 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.deeplearning.app.rtmp.RESFlvDataCollecter;
-import com.deeplearning.app.task.AudioSenderThread;
-import com.deeplearning.app.util.PrintUtils;
-
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import com.deeplearning.app.rtmp.RESFlvDataCollecter;
+import com.deeplearning.app.task.AudioSenderThread;
+import com.deeplearning.app.util.PrintUtils;
 
 /**
  * Created by qq1588518 on 17/12/01.

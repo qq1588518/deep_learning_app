@@ -1,7 +1,5 @@
 package com.deeplearning.app.service;
 
-import android.util.Log;
-import android.accessibilityservice.AccessibilityService;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import java.util.List;

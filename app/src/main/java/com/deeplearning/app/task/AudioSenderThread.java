@@ -2,14 +2,11 @@ package com.deeplearning.app.task;
 
 import android.media.MediaCodec;
 import android.util.Log;
+import java.nio.ByteBuffer;
 
 import com.deeplearning.app.core.Packager;
 import com.deeplearning.app.rtmp.RESFlvData;
 import com.deeplearning.app.rtmp.RESFlvDataCollecter;
-
-import java.nio.ByteBuffer;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by qq1588518 on 17/12/01.

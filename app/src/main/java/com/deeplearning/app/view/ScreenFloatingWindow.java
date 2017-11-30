@@ -15,13 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.deeplearning.app.model.DanmakuBean;
-
-import com.deeplearning_app.R;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.deeplearning.app.model.DanmakuBean;
+import com.deeplearning_app.R;
 
 /**
  * Created by qq1588518 on 17/12/01.

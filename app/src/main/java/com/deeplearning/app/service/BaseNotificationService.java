@@ -7,6 +7,7 @@ import android.os.Build;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.notification.IStatusBarNotification;
 

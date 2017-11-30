@@ -3,6 +3,8 @@
 
     <string name="app_name">DeepLearningApp</string>
     <string name="hello_world">Hello world!</string>
+    <string name="bar_shadow">bar-shadow</string>
+    <string name="tab_post">tab-post</string>
     <string name="action_settings">Settings</string>
     <string name="activity_name_classification">TF Classify</string>
     <string name="activity_name_detection">TF Detect</string>

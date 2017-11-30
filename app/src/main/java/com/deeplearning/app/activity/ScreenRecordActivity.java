@@ -17,9 +17,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.rtmp.RESFlvData;
-
 import com.deeplearning.app.IScreenRecorderAidlInterface;
 import com.deeplearning.app.core.RESAudioClient;
 import com.deeplearning.app.core.RESCoreParameters;
@@ -28,13 +32,8 @@ import com.deeplearning.app.rtmp.RESFlvDataCollecter;
 import com.deeplearning.app.service.ScreenRecordListenerService;
 import com.deeplearning.app.task.RtmpStreamingSender;
 import com.deeplearning.app.task.ScreenRecorderThread;
-
 import com.deeplearning_app.R;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by qq1588518 on 17/12/01.

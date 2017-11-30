@@ -9,13 +9,13 @@ import android.media.projection.MediaProjection;
 import android.util.Log;
 import android.view.Surface;
 
-import com.deeplearning.app.core.Packager;
-import com.deeplearning.app.rtmp.RESFlvData;
-import com.deeplearning.app.rtmp.RESFlvDataCollecter;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.deeplearning.app.core.Packager;
+import com.deeplearning.app.rtmp.RESFlvData;
+import com.deeplearning.app.rtmp.RESFlvDataCollecter;
 
 /**
  * Created by qq1588518 on 17/12/01.

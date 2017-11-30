@@ -1,10 +1,9 @@
 package com.deeplearning.app.core;
 
 import android.media.MediaFormat;
+import java.nio.ByteBuffer;
 
 import com.deeplearning.app.util.ByteArrayTools;
-
-import java.nio.ByteBuffer;
 
 /**
  * Created by qq1588518 on 17/12/01.

@@ -11,7 +11,6 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import com.deeplearning.app.adapter.CheckListAdapter;
-
 import com.deeplearning.app.config.Config;
 import com.deeplearning_app.R;
 

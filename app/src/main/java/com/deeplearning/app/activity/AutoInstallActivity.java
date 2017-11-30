@@ -10,9 +10,7 @@ import android.util.Log;
 import android.view.View;
 import java.io.File;
 
-import com.deeplearning.app.DLApplication;
 import com.deeplearning.app.config.Config;
-import com.deeplearning.app.service.BaseAccessibilityService;
 import com.deeplearning_app.R;
 
 /**

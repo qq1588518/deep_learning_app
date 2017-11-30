@@ -1,6 +1,5 @@
 package com.deeplearning.app.service;
 
-import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.KeyguardManager;

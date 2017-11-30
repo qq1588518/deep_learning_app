@@ -8,8 +8,8 @@ import android.preference.Preference;
 import android.util.Log;
 
 import com.deeplearning.app.config.Config;
-import com.deeplearning.app.view.BaseSettingsFragment;
 import com.deeplearning.app.DLApplication;
+import com.deeplearning.app.fragment.BaseRefreshFragment;
 import com.deeplearning_app.R;
 
 /**
@@ -22,7 +22,7 @@ public class WechatSettingsActivity extends SettingsActivity {
         return new WechatSettingsFragment();
     }
 
-    public static class WechatSettingsFragment extends BaseSettingsFragment {
+    public static class WechatSettingsFragment extends BaseRefreshFragment {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
