@@ -1,55 +1,98 @@
 package com.deeplearning.app.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
+import com.jpeng.jptabbar.BadgeDismissListener;
+import com.jpeng.jptabbar.JPTabBar;
+import com.jpeng.jptabbar.OnTabSelectListener;
+import com.jpeng.jptabbar.anno.NorIcons;
+import com.jpeng.jptabbar.anno.SeleIcons;
+import com.jpeng.jptabbar.anno.Titles;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.deeplearning_app.R;
-import com.deeplearning.app.fragment.GrapRedEnvelopeFragment;
-import com.deeplearning.app.fragment.GrapTrainTicketFragment;
-import com.deeplearning.app.fragment.SeckillLowPriceFragment;
-import com.deeplearning.app.fragment.AutoPlayGameFragment;
-import com.deeplearning.app.fragment.PersonSettingFragment;
-import com.deeplearning.app.widget.MainNavigateTabBar;
 
+public class MainActivity extends AppCompatActivity implements BadgeDismissListener, OnTabSelectListener{
 
-public class MainActivity extends AppCompatActivity {
+    @Titles
+    private static final String[] mTitles = {"页面一","页面二","页面三","页面四"};
 
-    private static final String TAG_Page_GrapRedEnvelope = "抢红包";
-    private static final String TAG_Page_GrapTrainTicket = "抢车票";
-    private static final String TAG_Page_PersonSetting = "训练学习";
-    private static final String TAG_Page_SeckillLowPrice = "秒低价";
-    private static final String TAG_PAGE_AutoPlayGame = "玩游戏";
+    @SeleIcons
+    private static final int[] mSeleIcons = {R.drawable.tab1_selected,R.drawable.tab2_selected,R.drawable.tab3_selected,R.drawable.tab4_selected};
 
+    @NorIcons
+    private static final int[] mNormalIcons = {R.drawable.tab1_normal, R.drawable.tab2_normal, R.drawable.tab3_normal, R.drawable.tab4_normal};
 
-    private MainNavigateTabBar mNavigateTabBar;
+    private List<Fragment> list = new ArrayList<>();
+
+    private ViewPager mPager;
+
+    private JPTabBar mTabbar;
+
+    private Tab1Pager mTab1;
+
+    private Tab2Pager mTab2;
+
+    private Tab3Pager mTab3;
+
+    private Tab4Pager mTab4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mTabbar = (JPTabBar) findViewById(R.id.tabbar);
+        mPager = (ViewPager) findViewById(R.id.view_pager);
+//        mTabbar.setTitles("qwe","asd","qwe","asdsa").setNormalIcons(R.drawable.tab1_normal,R.drawable.tab2_normal,R.drawable.tab3_normal,R.drawable.tab4_normal)
+//                .setSelectedIcons(R.drawable.tab1_selected,R.drawable.tab2_selected,R.drawable.tab3_selected,R.drawable.tab4_selected).generate();
+        mTab1 = new Tab1Pager();
+        mTab2 = new Tab2Pager();
+        mTab3 = new Tab3Pager();
+        mTabbar.setTabListener(this);
+        mTab4 = new Tab4Pager();
+        list.add(mTab1);
+        list.add(mTab2);
+        list.add(mTab3);
+        list.add(mTab4);
+        mPager.setAdapter(new Adapter(getSupportFragmentManager(),list));
+        mTabbar.setContainer(mPager);
+        mTabbar.setDismissListener(this);
+        //显示圆点模式的徽章
+        //设置容器
+        mTabbar.showBadge(0, 50);
+        //设置Badge消失的代理
+        mTabbar.setTabListener(this);
+        mTabbar.setUseScrollAnimate(true);
+        mTabbar.getMiddleView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this,"中间点击",Toast.LENGTH_SHORT).show();;
+            }
+        });
+    }
 
-        mNavigateTabBar = (MainNavigateTabBar) findViewById(R.id.mainTabBar);
-
-        mNavigateTabBar.onRestoreInstanceState(savedInstanceState);
-
-        mNavigateTabBar.addTab(GrapRedEnvelopeFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_home, R.drawable.comui_tab_home_selected, TAG_Page_GrapRedEnvelope));
-        mNavigateTabBar.addTab(GrapTrainTicketFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_city, R.drawable.comui_tab_city_selected, TAG_Page_GrapTrainTicket));
-        //mNavigateTabBar.addTab(PersonSettingFragment.class, new MainNavigateTabBar.TabParam(0, 0, TAG_Page_PersonSetting);
-        mNavigateTabBar.addTab(SeckillLowPriceFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_message, R.drawable.comui_tab_message_selected, TAG_Page_SeckillLowPrice));
-        mNavigateTabBar.addTab(AutoPlayGameFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_person, R.drawable.comui_tab_person_selected, TAG_PAGE_AutoPlayGame));
+    @Override
+    public void onDismiss(int position) {
+        if (position == 0) {
+            mTab1.clearCount();
+        }
     }
 
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mNavigateTabBar.onSaveInstanceState(outState);
+    public void onTabSelect(int index) {
+
     }
 
 
-    public void onClickPublish(View v) {
-        Toast.makeText(this, "发布", Toast.LENGTH_LONG).show();
+    public JPTabBar getTabbar() {
+        return mTabbar;
     }
+
+
 }

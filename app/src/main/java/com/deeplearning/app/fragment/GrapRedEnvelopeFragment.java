@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.preference.PreferenceFragment;
 
 import com.deeplearning.app.activity.GrapRedEnvelopeActivity;
 import com.deeplearning.app.activity.NotifySettingsActivity;
@@ -24,20 +25,18 @@ import com.deeplearning_app.R;
  * Date:2015-10-20
  * Description:
  */
-public class GrapRedEnvelopeFragment extends BaseRefreshFragment {
+public class GrapRedEnvelopeFragment extends PreferenceFragment {
     private static final String TAG = "GrapRedEnvelopeFragment";
     private SwitchPreference notificationPref;
     private boolean notificationChangeByUser = true;
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
-    }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
+
+        getPreferenceManager().setSharedPreferencesName(Config.PREFERENCE_NAME);
         addPreferencesFromResource(R.xml.main);
 
         //微信红包开关
@@ -118,7 +117,7 @@ public class GrapRedEnvelopeFragment extends BaseRefreshFragment {
                 return true;
             }
         });
-
+        return rootView;
     }
 
     /** 更新快速读取通知的设置*/

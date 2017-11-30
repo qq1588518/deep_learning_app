@@ -1,6 +1,7 @@
 package com.deeplearning.app.fragment;
 
 import android.os.Bundle;
+import android.app.Fragment;
 import android.preference.PreferenceFragment;
 
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.deeplearning.app.config.Config;
 import com.deeplearning_app.R;
 /**
  * Created by Oleksii Shliama.
@@ -25,7 +25,6 @@ public class BaseRefreshFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getPreferenceManager().setSharedPreferencesName(Config.PREFERENCE_NAME);
 
         Map<String, Integer> map;
         mSampleList = new ArrayList<>();

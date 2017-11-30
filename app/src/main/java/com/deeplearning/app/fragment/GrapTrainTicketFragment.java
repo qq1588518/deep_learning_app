@@ -1,11 +1,12 @@
 package com.deeplearning.app.fragment;
 
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.app.Fragment;
 import com.deeplearning_app.R;
 
 /**
@@ -13,7 +14,7 @@ import com.deeplearning_app.R;
  * Date:2015-10-20
  * Description:
  */
-public class GrapTrainTicketFragment extends BaseRefreshFragment {
+public class GrapTrainTicketFragment extends PreferenceFragment {
 
     @Nullable
     @Override

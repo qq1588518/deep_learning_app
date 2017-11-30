@@ -20,7 +20,7 @@ public abstract class SettingsActivity extends BaseActivity {
         if(Config.DEBUG) {
             Log.i(TAG, "onCreate");
         }
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main1);
 
         getFragmentManager().beginTransaction().add(R.id.container, getSettingsFragment()).commitAllowingStateLoss();
 

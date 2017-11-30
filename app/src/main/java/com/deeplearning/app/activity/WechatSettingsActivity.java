@@ -6,10 +6,10 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.util.Log;
+import android.preference.PreferenceFragment;
 
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.DLApplication;
-import com.deeplearning.app.fragment.BaseRefreshFragment;
 import com.deeplearning_app.R;
 
 /**
@@ -22,7 +22,7 @@ public class WechatSettingsActivity extends SettingsActivity {
         return new WechatSettingsFragment();
     }
 
-    public static class WechatSettingsFragment extends BaseRefreshFragment {
+    public static class WechatSettingsFragment extends PreferenceFragment {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class WechatSettingsActivity extends SettingsActivity {
             if(Config.DEBUG) {
                 Log.i(TAG, "onCreate");
             }
-
+            getPreferenceManager().setSharedPreferencesName(Config.PREFERENCE_NAME);
             addPreferencesFromResource(R.xml.wechat_settings);
 
             //微信红包模式

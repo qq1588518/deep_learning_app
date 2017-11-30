@@ -4,10 +4,10 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.util.Log;
+import android.preference.PreferenceFragment;
 
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.DLApplication;
-import com.deeplearning.app.fragment.BaseRefreshFragment;
 import com.deeplearning_app.R;
 
 /**
@@ -20,7 +20,7 @@ public class NotifySettingsActivity extends SettingsActivity {
         return new NotifySettingsFragment();
     }
 
-    public static class NotifySettingsFragment extends BaseRefreshFragment {
+    public static class NotifySettingsFragment extends PreferenceFragment {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +28,7 @@ public class NotifySettingsActivity extends SettingsActivity {
             if(Config.DEBUG) {
                 Log.i(TAG, "onCreate");
             }
+            getPreferenceManager().setSharedPreferencesName(Config.PREFERENCE_NAME);
             addPreferencesFromResource(R.xml.notify_settings);
 
             findPreference(Config.KEY_NOTIFY_SOUND).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
