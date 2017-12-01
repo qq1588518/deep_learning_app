@@ -15,16 +15,16 @@ public class DLApplication extends Application {
         System.loadLibrary("tensorflow_demo");
     }
 
-    private static Context sContext;
+    private static Context mContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sContext = getApplicationContext();
+        mContext = getApplicationContext();
     }
 
     public static Context getContext() {
-        return sContext;
+        return mContext;
     }
 
    public static void showShare(final Activity activity) {

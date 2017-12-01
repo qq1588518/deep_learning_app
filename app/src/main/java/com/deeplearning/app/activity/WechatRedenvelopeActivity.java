@@ -16,12 +16,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import java.io.File;
 
@@ -30,17 +35,135 @@ import com.deeplearning.app.config.Config;
 import com.deeplearning.app.job.WechatAccessbilityJob;
 import com.deeplearning.app.util.BitmapUtils;
 import com.deeplearning.app.service.BaseAccessibilityService;
-import com.deeplearning.app.fragment.GrapRedEnvelopeFragment;
 import com.deeplearning_app.R;
 
 /**
  * Created by qq1588518 on 17/12/01.
- * 抢红包主界面
+ * 抢红包主设置界面
  */
-public class GrapRedEnvelopeActivity extends SettingsActivity {
-    private static final String TAG = "MainActivity";
+public class WechatRedenvelopeActivity extends SettingsActivity {
+    private static final String TAG = "WechatRedenvelope";
     private Dialog mTipsDialog;
-    private GrapRedEnvelopeFragment mMainFragment;
+    private WechatRedenvelopeFragment mWechatRedenvelopeFragment;
+
+    public static class WechatRedenvelopeFragment extends PreferenceFragment {
+        private static final String TAG = "GrapRedEnvelopeFragment";
+        private SwitchPreference notificationPref;
+        private boolean notificationChangeByUser = true;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
+
+            getPreferenceManager().setSharedPreferencesName(Config.PREFERENCE_NAME);
+            addPreferencesFromResource(R.xml.main);
+
+            //微信红包开关
+            Preference wechatPref = findPreference(Config.KEY_ENABLE_WECHAT);
+            wechatPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    if((Boolean) newValue && !BaseAccessibilityService.isEnabled()) {
+                        ((WechatRedenvelopeActivity)getActivity()).showOpenAccessibilityServiceDialog();
+                    }
+                    return true;
+                }
+            });
+
+            notificationPref = (SwitchPreference) findPreference("KEY_NOTIFICATION_SERVICE_TEMP_ENABLE");
+            notificationPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                        Toast.makeText(getActivity(), "该功能只支持安卓4.3以上的系统", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+
+                    if(!notificationChangeByUser) {
+                        notificationChangeByUser = true;
+                        return true;
+                    }
+
+                    boolean enalbe = (boolean) newValue;
+
+                    Config.getConfig(getActivity()).setNotificationServiceEnable(enalbe);
+
+                    if(enalbe && !BaseAccessibilityService.isNotificationServiceRunning()) {
+                        ((WechatRedenvelopeActivity)getActivity()).openNotificationServiceSettings();
+                        return false;
+                    }
+                    DLApplication.eventStatistics(getActivity(), "notify_service", String.valueOf(newValue));
+                    return true;
+                }
+            });
+
+            Preference preference = findPreference("KEY_FOLLOW_ME");
+            if(preference != null) {
+                preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        ((WechatRedenvelopeActivity) getActivity()).showQrDialog();
+                        DLApplication.eventStatistics(getActivity(), "about_author");
+                        return true;
+                    }
+                });
+            }
+
+            preference = findPreference("KEY_DONATE_ME");
+            if(preference != null) {
+                preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        ((WechatRedenvelopeActivity) getActivity()).showDonateDialog();
+                        DLApplication.eventStatistics(getActivity(), "donate");
+                        return true;
+                    }
+                });
+            }
+
+            findPreference("WECHAT_SETTINGS").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivity(new Intent(getActivity(), WechatSettingsActivity.class));
+                    return true;
+                }
+            });
+
+            findPreference("NOTIFY_SETTINGS").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivity(new Intent(getActivity(), NotifySettingsActivity.class));
+                    return true;
+                }
+            });
+            return rootView;
+        }
+
+        /** 更新快速读取通知的设置*/
+        public void updateNotifyPreference() {
+            if(notificationPref == null) {
+                return;
+            }
+            boolean running = BaseAccessibilityService.isNotificationServiceRunning();
+            boolean enable = Config.getConfig(getActivity()).isEnableNotificationService();
+            if( enable && running && !notificationPref.isChecked()) {
+                DLApplication.eventStatistics(getActivity(), "notify_service", String.valueOf(true));
+                notificationChangeByUser = false;
+                notificationPref.setChecked(true);
+            } else if((!enable || !running) && notificationPref.isChecked()) {
+                notificationChangeByUser = false;
+                notificationPref.setChecked(false);
+            }
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            updateNotifyPreference();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +198,8 @@ public class GrapRedEnvelopeActivity extends SettingsActivity {
 
     @Override
     public Fragment getSettingsFragment() {
-        mMainFragment = new GrapRedEnvelopeFragment();
-        return mMainFragment;
+        mWechatRedenvelopeFragment = new WechatRedenvelopeFragment();
+        return mWechatRedenvelopeFragment;
     }
 
     private BroadcastReceiver qhbConnectReceiver = new BroadcastReceiver() {
@@ -96,13 +219,13 @@ public class GrapRedEnvelopeActivity extends SettingsActivity {
                 showOpenAccessibilityServiceDialog();
             }
             else if(Config.ACTION_NOTIFY_LISTENER_SERVICE_CONNECT.equals(action)) {
-                if(mMainFragment != null) {
-                    mMainFragment.updateNotifyPreference();
+                if(mWechatRedenvelopeFragment != null) {
+                    mWechatRedenvelopeFragment.updateNotifyPreference();
                 }
             }
             else if(Config.ACTION_NOTIFY_LISTENER_SERVICE_DISCONNECT.equals(action)) {
-                if(mMainFragment != null) {
-                    mMainFragment.updateNotifyPreference();
+                if(mWechatRedenvelopeFragment != null) {
+                    mWechatRedenvelopeFragment.updateNotifyPreference();
                 }
             }
         }
@@ -200,14 +323,14 @@ public class GrapRedEnvelopeActivity extends SettingsActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Config.getConfig(getApplicationContext()).setAgreement(true);
-                DLApplication.eventStatistics(GrapRedEnvelopeActivity.this, "agreement", "true");
+                DLApplication.eventStatistics(WechatRedenvelopeActivity.this, "agreement", "true");
             }
         });
         builder.setNegativeButton("不同意", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Config.getConfig(getApplicationContext()).setAgreement(false);
-                DLApplication.eventStatistics(GrapRedEnvelopeActivity.this, "agreement", "false");
+                DLApplication.eventStatistics(WechatRedenvelopeActivity.this, "agreement", "false");
                 finish();
             }
         });
@@ -247,7 +370,7 @@ public class GrapRedEnvelopeActivity extends SettingsActivity {
                 }
 
                 Toast.makeText(getApplicationContext(), "已复制到粘贴板", Toast.LENGTH_LONG).show();
-                DLApplication.eventStatistics(GrapRedEnvelopeActivity.this, "copy_qr");
+                DLApplication.eventStatistics(WechatRedenvelopeActivity.this, "copy_qr");
                 dialog.dismiss();
             }
         });
@@ -275,9 +398,9 @@ public class GrapRedEnvelopeActivity extends SettingsActivity {
                 File output = new File(android.os.Environment.getExternalStorageDirectory(), "codeboy_wechatpay_qr.jpg");
                 if(!output.exists()) {
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wechatpay_qr);
-                    BitmapUtils.saveBitmap(GrapRedEnvelopeActivity.this, output, bitmap);
+                    BitmapUtils.saveBitmap(WechatRedenvelopeActivity.this, output, bitmap);
                 }
-                Toast.makeText(GrapRedEnvelopeActivity.this, "已保存到:" + output.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                Toast.makeText(WechatRedenvelopeActivity.this, "已保存到:" + output.getAbsolutePath(), Toast.LENGTH_LONG).show();
                 return true;
             }
         });

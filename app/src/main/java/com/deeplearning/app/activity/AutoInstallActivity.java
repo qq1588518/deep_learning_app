@@ -27,7 +27,7 @@ public class AutoInstallActivity extends BaseActivity {
         if(Config.DEBUG) {
             Log.d(TAG, "onCreate");
         }
-        setContentView(R.layout.activity_main1);
+        setContentView(R.layout.activity_setting);
         mPackageManager = this.getPackageManager();
         mPackages = new String[]{"com.tencent.mm"};
     }

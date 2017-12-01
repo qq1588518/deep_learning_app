@@ -1,4 +1,4 @@
-package com.deeplearning.app.activity;
+package com.deeplearning.app.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,13 +11,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
+import com.deeplearning.app.activity.MainActivity;
 import com.jpeng.jptabbar.JPTabBar;
 import com.deeplearning_app.R;
 
 /**
  * Created by jpeng on 16-11-14.
  */
-public class Tab1Pager extends Fragment implements View.OnClickListener, TextWatcher {
+public class Tab2PagerFragment extends Fragment implements View.OnClickListener, TextWatcher {
 
     private EditText mNumberEt;
     private ImageButton mMinusIb, mPlusIb;

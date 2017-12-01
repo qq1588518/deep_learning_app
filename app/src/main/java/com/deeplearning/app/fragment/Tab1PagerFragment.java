@@ -1,4 +1,4 @@
-package com.deeplearning.app.activity;
+package com.deeplearning.app.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +11,7 @@ import com.deeplearning_app.R;
 /**
  * Created by jpeng on 16-11-14.
  */
-public class Tab4Pager extends Fragment {
+public class Tab1PagerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

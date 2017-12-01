@@ -1,4 +1,4 @@
-package com.deeplearning.app.activity;
+package com.deeplearning.app.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -8,53 +8,50 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
+
+import com.deeplearning.app.activity.MainActivity;
 import com.jpeng.jptabbar.JPTabBar;
-import com.jpeng.jptabbar.animate.AnimationType;
 import com.deeplearning_app.R;
 
 /**
  * Created by jpeng on 16-11-14.
  */
-public class Tab2Pager extends Fragment implements RadioGroup.OnCheckedChangeListener {
-
-    private RadioGroup mGroup;
-
-    private JPTabBar mTabBar;
-
-
+public class Tab4PagerFragment extends Fragment implements RadioGroup.OnCheckedChangeListener{
+    JPTabBar mTabBar;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layout =inflater.inflate(R.layout.tab2,null);
+        View layout = inflater.inflate(R.layout.tab3,null);
         init(layout);
         return layout;
     }
 
+    /**
+     * 初始化
+     */
     private void init(View layout) {
         mTabBar = ((MainActivity)getActivity()).getTabbar();
-        mGroup = (RadioGroup) layout.findViewById(R.id.radioGroup);
-        mGroup.setOnCheckedChangeListener(this);
+
+        ((RadioGroup)layout.findViewById(R.id.radioGroup1)).setOnCheckedChangeListener(this);
+        ((RadioGroup)layout.findViewById(R.id.radioGroup2)).setOnCheckedChangeListener(this);
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         switch (checkedId){
             case R.id.radioButton1:
-                mTabBar.setAnimation(AnimationType.SCALE);
+                mTabBar.setUseScrollAnimate(true);
                 break;
+
             case R.id.radioButton2:
-                mTabBar.setAnimation(AnimationType.SCALE2);
+                mTabBar.setUseScrollAnimate(false);
                 break;
+
             case R.id.radioButton3:
-                mTabBar.setAnimation(AnimationType.JUMP);
+                mTabBar.setUseFilter(true);
                 break;
             case R.id.radioButton4:
-                mTabBar.setAnimation(AnimationType.FLIP);
-
-                break;
-            case R.id.radioButton5:
-                mTabBar.setAnimation(AnimationType.ROTATE);
+                mTabBar.setUseFilter(false);
                 break;
         }
     }
-
 }

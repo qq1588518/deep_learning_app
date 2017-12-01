@@ -39,4 +39,13 @@ public class BaseActivity extends AppCompatActivity {
         }
         DLApplication.activityPauseStatistics(this);
     }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(Config.DEBUG) {
+            Log.i(TAG, "onDestroy");
+        }
+    }
 }

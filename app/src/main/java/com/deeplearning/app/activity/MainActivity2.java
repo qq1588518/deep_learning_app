@@ -6,11 +6,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.deeplearning_app.R;
-import com.deeplearning.app.fragment.GrapRedEnvelopeFragment;
-import com.deeplearning.app.fragment.GrapTrainTicketFragment;
-import com.deeplearning.app.fragment.SeckillLowPriceFragment;
-import com.deeplearning.app.fragment.AutoPlayGameFragment;
-import com.deeplearning.app.fragment.PersonSettingFragment;
+import com.deeplearning.app.fragment.Tab1PagerFragment;
+import com.deeplearning.app.fragment.Tab2PagerFragment;
+import com.deeplearning.app.fragment.Tab3PagerFragment;
+import com.deeplearning.app.fragment.Tab4PagerFragment;
 import com.deeplearning.app.widget.MainNavigateTabBar;
 
 
@@ -18,7 +17,7 @@ public class MainActivity2 extends AppCompatActivity {
 
     private static final String TAG_Page_GrapRedEnvelope = "抢红包";
     private static final String TAG_Page_GrapTrainTicket = "抢车票";
-    private static final String TAG_Page_PersonSetting = "训练学习";
+    private static final String TAG_Page_PersonSetting = "深度学习";
     private static final String TAG_Page_SeckillLowPrice = "秒低价";
     private static final String TAG_PAGE_AutoPlayGame = "玩游戏";
     private MainNavigateTabBar mNavigateTabBar;
@@ -32,12 +31,11 @@ public class MainActivity2 extends AppCompatActivity {
 
         mNavigateTabBar.onRestoreInstanceState(savedInstanceState);
 
-        mNavigateTabBar.addTab(GrapRedEnvelopeFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_home, R.drawable.comui_tab_home_selected, TAG_Page_GrapRedEnvelope));
-        mNavigateTabBar.addTab(GrapTrainTicketFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_city, R.drawable.comui_tab_city_selected, TAG_Page_GrapTrainTicket));
-        mNavigateTabBar.addTab(PersonSettingFragment.class, new MainNavigateTabBar.TabParam(0, 0, TAG_Page_PersonSetting));
-        //mNavigateTabBar.addTab(null, new MainNavigateTabBar.TabParam(0, 0, TAG_Page_PersonSetting));
-        mNavigateTabBar.addTab(SeckillLowPriceFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_message, R.drawable.comui_tab_message_selected, TAG_Page_SeckillLowPrice));
-        mNavigateTabBar.addTab(AutoPlayGameFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_person, R.drawable.comui_tab_person_selected, TAG_PAGE_AutoPlayGame));
+        mNavigateTabBar.addTab(Tab1PagerFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_home, R.drawable.comui_tab_home_selected, TAG_Page_GrapRedEnvelope));
+        mNavigateTabBar.addTab(Tab2PagerFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_city, R.drawable.comui_tab_city_selected, TAG_Page_GrapTrainTicket));
+        mNavigateTabBar.addTab(null, new MainNavigateTabBar.TabParam(0, 0, TAG_Page_PersonSetting));
+        mNavigateTabBar.addTab(Tab3PagerFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_message, R.drawable.comui_tab_message_selected, TAG_Page_SeckillLowPrice));
+        mNavigateTabBar.addTab(Tab4PagerFragment.class, new MainNavigateTabBar.TabParam(R.drawable.comui_tab_person, R.drawable.comui_tab_person_selected, TAG_PAGE_AutoPlayGame));
     }
 
 
