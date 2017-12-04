@@ -26,7 +26,7 @@ public class Tab3PagerFragment extends Fragment implements RadioGroup.OnCheckedC
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layout =inflater.inflate(R.layout.tab2,null);
+        View layout =inflater.inflate(R.layout.tab3,null);
         init(layout);
         return layout;
     }

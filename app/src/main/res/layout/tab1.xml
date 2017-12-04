@@ -5,83 +5,43 @@
               android:orientation="vertical"
               android:layout_height="match_parent">
 
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="消息测试"
-        android:layout_marginBottom="10dp"
-        android:textSize="19sp"
-        android:id="@+id/textView"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/ID_TEXT_WECHAT"
         android:layout_width="match_parent"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:contentDescription="开启抢红包平台"
+        android:text="微信" />
 
-        <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@null"
-
-            android:scaleType="fitXY"
-            android:src="@drawable/minus_50"
-            android:id="@+id/imageButton1"/>
-
-        <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@null"
-            android:scaleType="fitXY"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/plus_50"
-            android:id="@+id/imageButton2"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
+    <Switch
+        android:id="@+id/ID_ASSISTANT_SETTINGS"
         android:layout_width="match_parent"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:text="当前的消息个数为:"
-            android:textSize="15sp"
-            />
-
-        <EditText
-            android:id="@+id/et_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#f00"
-            android:text="50"
-
-            android:inputType="number"
-            android:layout_marginLeft="20dp"
-            />
-    </LinearLayout>
-
-    <Button
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="显示文字"
-        android:id="@+id/button1"/>
+        android:contentDescription="开启抢红包平台"
+        android:text="辅助功能服务设置"
+        android:visibility="visible" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <Switch
+        android:id="@+id/ID_NOTIFY_SETTINGS"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="显示圆点"
-        android:id="@+id/button2"/>
+        android:contentDescription="快速监听通知栏，抢红包更快更稳定"
+        android:text="通知栏监听服务设置"
+        android:visibility="visible" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <Switch
+        android:id="@+id/ID_WECHAT_SETTINGS"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="隐藏徽章"
-        android:id="@+id/button3"/>
+        android:contentDescription="更改抢红包模式，可以防封号"
+        android:text="微信抢红包设置"
+        android:visibility="visible" />
+
+    <Switch
+        android:id="@+id/ID_WECHAT_NOTIFY_SETTINGS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="更改抢红包模式，可以防封号"
+        android:text="微信通知设置"
+        android:visibility="visible" />
 </LinearLayout>

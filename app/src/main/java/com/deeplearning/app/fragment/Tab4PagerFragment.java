@@ -20,7 +20,7 @@ public class Tab4PagerFragment extends Fragment implements RadioGroup.OnCheckedC
     JPTabBar mTabBar;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.tab3,null);
+        View layout = inflater.inflate(R.layout.tab4,null);
         init(layout);
         return layout;
     }

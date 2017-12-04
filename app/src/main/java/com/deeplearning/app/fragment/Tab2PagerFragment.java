@@ -29,7 +29,7 @@ public class Tab2PagerFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.tab1, null);
+        View layout = inflater.inflate(R.layout.tab2, null);
         init(layout);
         return layout;
     }
@@ -52,23 +52,23 @@ public class Tab2PagerFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        int count = Integer.parseInt(mNumberEt.getText().toString());
-        if (v == mMinusIb) {
-            count--;
-            mNumberEt.setText(count + "");
-        } else if(v==mPlusIb) {
-            count++;
-            mNumberEt.setText(count + "");
-        }
-        else if(v==mShowTextBtn){
-            mTabBar.showBadge(0,"文字");
-        }
-        else if(v==mShowCircleBtn){
-            mTabBar.showCircleBadge(0);
-        }
-        else{
-            mTabBar.hideBadge(0);
-        }
+//        int count = Integer.parseInt(mNumberEt.getText().toString());
+//        if (v == mMinusIb) {
+//            count--;
+//            mNumberEt.setText(count + "");
+//        } else if(v==mPlusIb) {
+//            count++;
+//            mNumberEt.setText(count + "");
+//        }
+//        else if(v==mShowTextBtn){
+//            mTabBar.showBadge(0,"文字");
+//        }
+//        else if(v==mShowCircleBtn){
+//            mTabBar.showCircleBadge(0);
+//        }
+//        else{
+//            mTabBar.hideBadge(0);
+//        }
     }
 
     @Override
@@ -84,13 +84,13 @@ public class Tab2PagerFragment extends Fragment implements View.OnClickListener,
     @Override
     public void afterTextChanged(Editable s) {
 
-        if (s.toString().equals("")) {
-            mTabBar.showBadge(0, 0);
-            return;
-        }
-        int count = Integer.parseInt(s.toString());
-        if(mTabBar!=null)
-            mTabBar.showBadge(0, count,true);
+//        if (s.toString().equals("")) {
+//            mTabBar.showBadge(0, 0);
+//            return;
+//        }
+//        int count = Integer.parseInt(s.toString());
+//        if(mTabBar!=null)
+//            mTabBar.showBadge(0, count,true);
     }
 
     public void clearCount() {

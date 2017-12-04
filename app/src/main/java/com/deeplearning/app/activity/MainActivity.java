@@ -1,12 +1,17 @@
 package com.deeplearning.app.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.deeplearning.app.DLApplication;
+import com.deeplearning.app.config.Config;
 import com.deeplearning.app.fragment.Tab1PagerFragment;
 import com.deeplearning.app.fragment.Tab2PagerFragment;
 import com.deeplearning.app.fragment.Tab3PagerFragment;
@@ -23,7 +28,7 @@ import java.util.List;
 import com.deeplearning_app.R;
 
 public class MainActivity extends BaseActivity implements BadgeDismissListener, OnTabSelectListener{
-
+    private static final String TAG = "MainActivity";
     @Titles
     private static final String[] mTitles = {"抢红包","抢车票","秒购物","玩游戏"};
 
@@ -46,6 +51,10 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
     private Tab3PagerFragment mTab3;
 
     private Tab4PagerFragment mTab4;
+
+    public JPTabBar getTabbar() {
+        return mTabbar;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +79,7 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
         mTabbar.setDismissListener(this);
         //显示圆点模式的徽章
         //设置容器
-        mTabbar.showBadge(0, 50);
+        //mTabbar.showBadge(1, 50);
         //设置Badge消失的代理
         mTabbar.setTabListener(this);
         mTabbar.setUseScrollAnimate(true);
@@ -89,16 +98,65 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(Config.DEBUG) {
+            Log.i(TAG, "onDestroy");
+        }
+        try {
+            unregisterReceiver(qhbConnectReceiver);
+        } catch (Exception e) {}
+    }
 
     @Override
     public void onTabSelect(int index) {
-        Toast.makeText(MainActivity.this,"Tab" + index,Toast.LENGTH_SHORT).show();;
+        switch (index) {
+            case 0:
+                //startActivity(new Intent(MainActivity.this, WechatRedenvelopeActivity.class));
+                Toast.makeText(MainActivity.this,"Tab" + index,Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                Toast.makeText(MainActivity.this,"Tab" + index,Toast.LENGTH_SHORT).show();
+                //startActivity(new Intent(MainActivity.this, NotifySettingsActivity.class));
+                break;
+            case 3:
+                Toast.makeText(MainActivity.this,"Tab" + index,Toast.LENGTH_SHORT).show();
+                //startActivity(new Intent(MainActivity.this, WechatSettingsActivity.class));
+                break;
+            case 4:
+                Toast.makeText(MainActivity.this,"Tab" + index,Toast.LENGTH_SHORT).show();
+                //startActivity(new Intent(MainActivity.this, WechatSettingsActivity.class));
+                break;
+        }
     }
 
-
-    public JPTabBar getTabbar() {
-        return mTabbar;
-    }
+    private BroadcastReceiver qhbConnectReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(isFinishing()) {
+                return;
+            }
+            String action = intent.getAction();
+            Log.d(TAG, "receive-->" + action);
+            if(Config.ACTION_QIANGHONGBAO_SERVICE_CONNECT.equals(action)) {
+                mTab1.dismiss();
+            }
+            else if(Config.ACTION_QIANGHONGBAO_SERVICE_DISCONNECT.equals(action)) {
+                mTab1.showOpenAccessibilityServiceDialog();
+            }
+            else if(Config.ACTION_NOTIFY_LISTENER_SERVICE_CONNECT.equals(action)) {
+                if(mTab1 != null) {
+                    mTab1.updateNotifyPreference();
+                }
+            }
+            else if(Config.ACTION_NOTIFY_LISTENER_SERVICE_DISCONNECT.equals(action)) {
+                if(mTab1 != null) {
+                    mTab1.updateNotifyPreference();
+                }
+            }
+        }
+    };
 
 
 }

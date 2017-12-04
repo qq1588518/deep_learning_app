@@ -55,7 +55,7 @@ public class WechatRedenvelopeActivity extends SettingsActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
+            ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab1, container, false);
 
             getPreferenceManager().setSharedPreferencesName(Config.PREFERENCE_NAME);
             addPreferencesFromResource(R.xml.main);
@@ -134,7 +134,7 @@ public class WechatRedenvelopeActivity extends SettingsActivity {
             findPreference("NOTIFY_SETTINGS").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    startActivity(new Intent(getActivity(), NotifySettingsActivity.class));
+                    startActivity(new Intent(getActivity(), WechatNotifySettingsActivity.class));
                     return true;
                 }
             });
