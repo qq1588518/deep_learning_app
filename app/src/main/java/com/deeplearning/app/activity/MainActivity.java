@@ -3,6 +3,7 @@ package com.deeplearning.app.activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -16,6 +17,7 @@ import com.deeplearning.app.fragment.Tab1PagerFragment;
 import com.deeplearning.app.fragment.Tab2PagerFragment;
 import com.deeplearning.app.fragment.Tab3PagerFragment;
 import com.deeplearning.app.fragment.Tab4PagerFragment;
+import com.deeplearning.app.adapter.MainFragmentPagerAdapter;
 import com.jpeng.jptabbar.BadgeDismissListener;
 import com.jpeng.jptabbar.JPTabBar;
 import com.jpeng.jptabbar.OnTabSelectListener;
@@ -74,7 +76,7 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
         list.add(mTab2);
         list.add(mTab3);
         list.add(mTab4);
-        mPager.setAdapter(new Adapter(getSupportFragmentManager(),list));
+        mPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager(),list));
         mTabbar.setContainer(mPager);
         mTabbar.setDismissListener(this);
         //显示圆点模式的徽章
@@ -89,6 +91,15 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
                 Toast.makeText(MainActivity.this,"深度学习",Toast.LENGTH_SHORT).show();;
             }
         });
+
+        DLApplication.activityStartMain(this);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Config.ACTION_QIANGHONGBAO_SERVICE_CONNECT);
+        filter.addAction(Config.ACTION_QIANGHONGBAO_SERVICE_DISCONNECT);
+        filter.addAction(Config.ACTION_NOTIFY_LISTENER_SERVICE_DISCONNECT);
+        filter.addAction(Config.ACTION_NOTIFY_LISTENER_SERVICE_CONNECT);
+        registerReceiver(qhbConnectReceiver, filter);
     }
 
     @Override

@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -51,9 +52,6 @@
             android:name="com.deeplearning.app.activity.AppChooserActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name="com.deeplearning.app.activity.AutoInstallActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
-        <activity
             android:name="com.deeplearning.app.activity.CameraRecordActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
@@ -63,10 +61,6 @@
             android:name="com.deeplearning.app.activity.AboutMeActivity"
             android:theme="@style/Base.Theme.AppCompat"
             android:label="@string/about_title" />
-        <activity
-            android:name="com.deeplearning.app.activity.NotifySettingsActivity"
-            android:theme="@style/Base.Theme.AppCompat"
-            android:label="@string/notify_settings" />
         <activity
             android:name="com.deeplearning.app.activity.WechatSettingsActivity"
             android:theme="@style/Base.Theme.AppCompat"
@@ -103,121 +97,17 @@
                 android:resource="@xml/service_config" />
         </service>
 
-        <!--
         <service
-            android:name="com.deeplearning.app.service.AccessibilityService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
+            android:name="com.deeplearning.app.service.ScreenRecordListenerService"
+            android:exported="false"
+            android:label="ScreenRecordListenerService"
+            android:icon="@drawable/ic_launcher"
+            android:process=":ScreenRecord">
+            <intent-filter android:priority="800">
+                <!--  指定调用AIDL服务的ID  -->
+                <action android:name="com.deeplearning.app.service.aidl.IScreenRecorderAidlInterface" />
             </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/service_config" />
         </service>
-
-        <service
-            android:name="com.deeplearning.app.service.AutoInstallService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="@string/auto_install_accessibility_description"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/auto_install_services_config" />
-        </service>
-
-        <service
-            android:name="com.deeplearning.app.service.AutoReplyAccessibilityService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="@string/reply"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/reply"/>
-        </service>
-
-        <service
-            android:name="com.deeplearning.app.service.AutoInstallAccessibilityService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="@string/install"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/install"/>
-        </service>
-
-        <service
-            android:name="com.deeplearning.app.service.AutoReplyService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="@string/auto_reply_accessibility_description"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/auto_reply_service_config" />
-        </service>
-
-
-
-        <service
-            android:name="com.deeplearning.app.service.CleanBackgroundProcessAccessibilityService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="@string/clean"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/clean"/>
-        </service>
-
-        <service
-            android:name="com.deeplearning.app.service.SelfDefenseAccessibilityService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="@string/defense"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/defense"/>
-        </service>
-
-        <service
-            android:name="com.deeplearning.app.service.SearchHackAccessibilityService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="@string/search"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/search"/>
-        </service>-->
-
     </application>
 
 </manifest>

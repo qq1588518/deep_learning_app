@@ -22,11 +22,8 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.deeplearning.app.DLApplication;
-import com.deeplearning.app.activity.MainActivity;
-import com.deeplearning.app.activity.WechatNotifySettingsActivity;
-import com.deeplearning.app.activity.WechatRedenvelopeActivity;
-import com.deeplearning.app.activity.WechatSettingsActivity;
 import com.deeplearning.app.config.Config;
+import com.deeplearning.app.activity.WechatSettingsActivity;
 import com.deeplearning.app.service.BaseAccessibilityService;
 import com.deeplearning_app.R;
 
@@ -36,32 +33,29 @@ import com.deeplearning_app.R;
  */
 public class Tab1PagerFragment extends Fragment {
     private static final String TAG = "Tab1PagerFragment";
-    //private SwitchPreference notificationPref;
     private boolean notificationChangeByUser = true;
 
     private Switch mSwitchAssistantSetting;
     private Switch mSwitchNotifySetting;
     private Switch mSwitchWechatSetting;
-    private Switch mSwitchWechatNotifySetting;
     private Dialog mTipsDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab1, container, false);
-        //return inflater.inflate(R.layout.tab1,null);
         mSwitchAssistantSetting = (Switch) rootView.findViewById(R.id.ID_ASSISTANT_SETTINGS);
         // 添加监听
         mSwitchAssistantSetting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    Toast.makeText(getActivity(),"开启",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"辅助功能服务开启",Toast.LENGTH_SHORT).show();
                     if(!BaseAccessibilityService.isEnabled()) {
                         showOpenAccessibilityServiceDialog();
                     }
                 }else {
-                    Toast.makeText(getActivity(),"关闭",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"辅助功能服务关闭",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -76,12 +70,12 @@ public class Tab1PagerFragment extends Fragment {
                 }
                 Config.getConfig(getActivity()).setNotificationServiceEnable(isChecked);
                 if (isChecked){
-                    Toast.makeText(getActivity(),"开启",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"通知栏监听服务开启",Toast.LENGTH_SHORT).show();
                     if(!BaseAccessibilityService.isNotificationServiceRunning()) {
                         openNotificationServiceSettings();
                     }
                 }else {
-                    Toast.makeText(getActivity(),"关闭",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"通知栏监听服务关闭",Toast.LENGTH_SHORT).show();
                 }
                 DLApplication.eventStatistics(getActivity(), "notify_service", String.valueOf(isChecked));
             }
@@ -93,26 +87,14 @@ public class Tab1PagerFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    Toast.makeText(getActivity(),"开启",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"微信抢红包设置开启",Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), WechatSettingsActivity.class));
                 }else {
-                    Toast.makeText(getActivity(),"关闭",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"微信抢红包设置关闭",Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        mSwitchWechatNotifySetting = (Switch) rootView.findViewById(R.id.ID_WECHAT_NOTIFY_SETTINGS);
-        mSwitchWechatNotifySetting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    Toast.makeText(getActivity(),"开启",Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getActivity(), WechatNotifySettingsActivity.class));
-                }else {
-                    Toast.makeText(getActivity(),"关闭",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
         return rootView;
     }
 

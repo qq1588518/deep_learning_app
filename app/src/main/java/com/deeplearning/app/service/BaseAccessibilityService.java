@@ -24,6 +24,7 @@ import com.deeplearning.app.config.Config;
 import com.deeplearning.app.job.AccessbilityJob;
 import com.deeplearning.app.job.WechatAccessbilityJob;
 import com.deeplearning.app.notification.IStatusBarNotification;
+import com.deeplearning.app.util.PrintUtils;
 
 /**
  * Created by qq1588518 on 17/12/01.
@@ -136,6 +137,34 @@ public class BaseAccessibilityService extends AccessibilityService {
                 if(pkn.equals(job.getTargetPackageName()) && job.isEnable()) {
                     job.onReceiveJob(event);
                 }
+            }
+        }
+        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED &&
+                event.getPackageName().equals("com.android.packageinstaller")) {
+            AccessibilityNodeInfo nodeInfo = findViewByText("安装", true);
+            if (nodeInfo != null) {
+                performViewClick(nodeInfo);
+            }
+            PrintUtils.printEvent(event);
+            findAndPerformActionButton("继续");
+            findAndPerformActionTextView("下一步");
+            findAndPerformActionTextView("安装");
+        }
+
+        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED &&
+                event.getPackageName().equals("com.android.settings")) {
+            CharSequence className = event.getClassName();
+            if (className.equals("com.android.settings.applications.InstalledAppDetailsTop")) {
+                AccessibilityNodeInfo info = findViewByText("强行停止");
+                if (info.isEnabled()) {
+                    performViewClick(info);
+                } else {
+                    performBackClick();
+                }
+            }
+            if (className.equals("android.app.AlertDialog")) {
+                clickTextViewByText("确定");
+                performBackClick();
             }
         }
     }
@@ -368,6 +397,34 @@ public class BaseAccessibilityService extends AccessibilityService {
             clipboard.setPrimaryClip(clip);
             nodeInfo.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
             nodeInfo.performAction(AccessibilityNodeInfo.ACTION_PASTE);
+        }
+    }
+
+    private void findAndPerformActionButton(String text) {
+        if (getRootInActiveWindow() == null)//取得当前激活窗体的根节点
+            return;
+        //通过文字找到当前的节点
+        List<AccessibilityNodeInfo> nodes = getRootInActiveWindow().findAccessibilityNodeInfosByText(text);
+        for (int i = 0; i < nodes.size(); i++) {
+            AccessibilityNodeInfo node = nodes.get(i);
+            // 执行按钮点击行为
+            if (node.getClassName().equals("android.widget.Button") && node.isEnabled()) {
+                node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
+        }
+    }
+
+    private void findAndPerformActionTextView(String text) {
+        if (getRootInActiveWindow() == null)
+            return;
+        //通过文字找到当前的节点
+        List<AccessibilityNodeInfo> nodes = getRootInActiveWindow().findAccessibilityNodeInfosByText(text);
+        for (int i = 0; i < nodes.size(); i++) {
+            AccessibilityNodeInfo node = nodes.get(i);
+            // 执行按钮点击行为
+            if (node.getClassName().equals("android.widget.TextView") && node.isEnabled()) {
+                node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package com.deeplearning.app.service;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -17,7 +18,8 @@ import com.deeplearning.app.notification.IStatusBarNotification;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class BaseNotificationService extends NotificationListenerService {
     private static final String TAG = "NotificationService";
-
+    private PackageManager mPackageManager;
+    private String[] mPackages;
     private static BaseNotificationService mInstance;
     private boolean isConnect = false;
 

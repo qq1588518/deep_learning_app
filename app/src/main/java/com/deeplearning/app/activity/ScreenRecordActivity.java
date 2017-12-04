@@ -5,11 +5,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -17,11 +21,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.deeplearning.app.DLApplication;
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.rtmp.RESFlvData;
 import com.deeplearning.app.IScreenRecorderAidlInterface;
@@ -38,8 +44,10 @@ import com.deeplearning_app.R;
 /**
  * Created by qq1588518 on 17/12/01.
  */
-public class ScreenRecordActivity extends Activity implements View.OnClickListener {
+public class ScreenRecordActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "ScreenRecordActivity";
+    private PackageManager mPackageManager;
+    private String[] mPackages;
     private static final int REQUEST_CODE = 1;
     private Button mButton;
     private EditText mRtmpAddET;
@@ -82,6 +90,8 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
             Log.i(TAG, "onCreate");
         }
         setContentView(R.layout.activity_screen);
+        mPackageManager = this.getPackageManager();
+        mPackages = new String[]{"com.tencent.mm"};
         mButton = (Button) findViewById(R.id.button);
         mRtmpAddET = (EditText) findViewById(R.id.et_rtmp_address);
         mButton.setOnClickListener(this);
@@ -255,4 +265,36 @@ public class ScreenRecordActivity extends Activity implements View.OnClickListen
         mButton.setText("Restart recorder");
     }
 
+    public void goApp(View view) {
+        if(Config.DEBUG) {
+            Log.d(TAG, "goApp");
+        }
+        Intent intent = mPackageManager.getLaunchIntentForPackage("com.tencent.mm");
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    public void cleanProcess(View view) {
+        if(Config.DEBUG) {
+            Log.d(TAG, "cleanProcess");
+        }
+        for (String mPackage : mPackages) {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", mPackage, null);
+            intent.setData(uri);
+            startActivity(intent);
+        }
+    }
+
+    public void autoInstall(View view) {
+        if(Config.DEBUG) {
+            Log.d(TAG, "autoInstall");
+        }
+        String apkPath = Environment.getExternalStorageDirectory() + "/deeplearning_app.apk";
+        Uri uri = Uri.fromFile(new File(apkPath));
+        Intent localIntent = new Intent(Intent.ACTION_VIEW);
+        localIntent.setDataAndType(uri, "application/vnd.android.package-archive");
+        startActivity(localIntent);
+    }
 }

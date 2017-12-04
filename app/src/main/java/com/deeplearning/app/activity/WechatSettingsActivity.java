@@ -7,7 +7,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.util.Log;
 import android.preference.PreferenceFragment;
-
+import com.deeplearning.app.widget.CustomSwitchPreference;
 import com.deeplearning.app.config.Config;
 import com.deeplearning.app.DLApplication;
 import com.deeplearning_app.R;
@@ -33,6 +33,33 @@ public class WechatSettingsActivity extends SettingsActivity {
             }
             getPreferenceManager().setSharedPreferencesName(Config.PREFERENCE_NAME);
             addPreferencesFromResource(R.xml.wechat_settings);
+            //微信红包通知声音
+            final CustomSwitchPreference notifySound = (CustomSwitchPreference) findPreference(Config.KEY_NOTIFY_SOUND);
+            notifySound.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    DLApplication.eventStatistics(getActivity(), "notify_sound", String.valueOf(newValue));
+                    return true;
+                }
+            });
+            //微信红包震动模式
+            final CustomSwitchPreference notifyVibrate = (CustomSwitchPreference) findPreference(Config.KEY_NOTIFY_VIBRATE);
+            notifyVibrate.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    DLApplication.eventStatistics(getActivity(), "notify_vibrate", String.valueOf(newValue));
+                    return true;
+                }
+            });
+            //微信红包夜间模式
+            final CustomSwitchPreference notifyNightEnable = (CustomSwitchPreference) findPreference(Config.KEY_NOTIFY_NIGHT_ENABLE);
+            notifyNightEnable.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    DLApplication.eventStatistics(getActivity(), "notify_night", String.valueOf(newValue));
+                    return true;
+                }
+            });
 
             //微信红包模式
             final ListPreference wxMode = (ListPreference) findPreference(Config.KEY_WECHAT_MODE);

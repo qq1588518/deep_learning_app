@@ -37,11 +37,4 @@
         android:text="微信抢红包设置"
         android:visibility="visible" />
 
-    <Switch
-        android:id="@+id/ID_WECHAT_NOTIFY_SETTINGS"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="更改抢红包模式，可以防封号"
-        android:text="微信通知设置"
-        android:visibility="visible" />
 </LinearLayout>
