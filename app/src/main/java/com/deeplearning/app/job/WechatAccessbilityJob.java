@@ -32,9 +32,6 @@ import java.util.List;
 public class WechatAccessbilityJob extends BaseAccessbilityJob {
 
     private static final String TAG = "WechatAccessbilityJob";
-    private static final String TEXTVIEW_CLASS_NAME = "android.widget.TextView";
-    private static final String IMAGEVIEW_CLASS_NAME = "android.widget.ImageView";
-    private static final String BUTTON_CLASS_NAME = "android.widget.Button";
 
     /** 红包消息的关键字*/
     private static final String LUCKYMONEY_TEXT_KEY = "[微信红包]";
@@ -160,7 +157,7 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
         if(list != null && !list.isEmpty()) {
             AccessibilityNodeInfo parent = null;
             for(AccessibilityNodeInfo node : list) {
-                if(!IMAGEVIEW_CLASS_NAME.equals(node.getClassName())) {
+                if(!Config.IMAGEVIEW_CLASS_NAME.equals(node.getClassName())) {
                     continue;
                 }
                 String desc = String.valueOf(node.getContentDescription());
@@ -176,7 +173,7 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
             if(parent != null) {
                 if( parent.getChildCount() >= 2) {
                     AccessibilityNodeInfo node = parent.getChild(1);
-                    if(TEXTVIEW_CLASS_NAME.equals(node.getClassName())) {
+                    if(Config.TEXTVIEW_CLASS_NAME.equals(node.getClassName())) {
                         title = String.valueOf(node.getText());
                     }
                 }
@@ -281,7 +278,7 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
                     if(textNode != null) {
                         for (int i = 0; i < textNode.getChildCount(); i++) {
                             AccessibilityNodeInfo node = textNode.getChild(i);
-                            if (BUTTON_CLASS_NAME.equals(node.getClassName())) {
+                            if (Config.BUTTON_CLASS_NAME.equals(node.getClassName())) {
                                 targetNode = node;
                                 break;
                             }
@@ -290,7 +287,7 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
                 }
 
                 if(targetNode == null) { //通过组件查找
-                    targetNode = AccessibilityHelper.findNodeInfosByClassName(nodeInfo, BUTTON_CLASS_NAME);
+                    targetNode = AccessibilityHelper.findNodeInfosByClassName(nodeInfo, Config.BUTTON_CLASS_NAME);
                 }
             }
         } else if(event == Config.WX_AFTER_OPEN_SEE) { //看一看
