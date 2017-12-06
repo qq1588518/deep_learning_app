@@ -36,7 +36,7 @@ public class BaseAccessibilityService extends AccessibilityService {
     private HashMap<String, AccessbilityJob> mPkgAccessbilityJobMap;
     private boolean isConnect = false;
 
-    private static final Class[] ACCESSBILITY_JOBS= {
+    private static final Class[] ACCESSBILITY_JOBS = {
             WechatAccessbilityJob.class,
     };
 
@@ -54,7 +54,7 @@ public class BaseAccessibilityService extends AccessibilityService {
     @Override
     public void onCreate() {
         super.onCreate();
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.d(TAG, " onCreate");
         }
         mInstance = this;
@@ -62,10 +62,10 @@ public class BaseAccessibilityService extends AccessibilityService {
         mPkgAccessbilityJobMap = new HashMap<>();
 
         //初始化辅助插件工作
-        for(Class clazz : ACCESSBILITY_JOBS) {
+        for (Class clazz : ACCESSBILITY_JOBS) {
             try {
                 Object object = clazz.newInstance();
-                if(object instanceof AccessbilityJob) {
+                if (object instanceof AccessbilityJob) {
                     AccessbilityJob job = (AccessbilityJob) object;
                     job.onCreateJob(mInstance);
                     mAccessbilityJobs.add(job);
@@ -80,13 +80,13 @@ public class BaseAccessibilityService extends AccessibilityService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.d(TAG, " onDestroy");
         }
-        if(mPkgAccessbilityJobMap != null) {
+        if (mPkgAccessbilityJobMap != null) {
             mPkgAccessbilityJobMap.clear();
         }
-        if(mAccessbilityJobs != null && !mAccessbilityJobs.isEmpty()) {
+        if (mAccessbilityJobs != null && !mAccessbilityJobs.isEmpty()) {
             for (AccessbilityJob job : mAccessbilityJobs) {
                 job.onStopJob();
             }
@@ -104,7 +104,7 @@ public class BaseAccessibilityService extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.d(TAG, " onInterrupt");
         }
         Toast.makeText(this, "中断抢红包服务", Toast.LENGTH_SHORT).show();
@@ -113,7 +113,7 @@ public class BaseAccessibilityService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.d(TAG, " onServiceConnected");
         }
         isConnect = true;
@@ -125,16 +125,16 @@ public class BaseAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        if(Config.DEBUG) {
-            Log.d(TAG, " onAccessibilityEvent 事件--->" + event );
+        if (Config.DEBUG) {
+            Log.d(TAG, " onAccessibilityEvent 事件--->" + event);
         }
         String packageName = String.valueOf(event.getPackageName());
-        if(mAccessbilityJobs != null && !mAccessbilityJobs.isEmpty()) {
-            if(!getConfig().isAgreement()) {
+        if (mAccessbilityJobs != null && !mAccessbilityJobs.isEmpty()) {
+            if (!getConfig().isAgreement()) {
                 return;
             }
             for (AccessbilityJob job : mAccessbilityJobs) {
-                if(packageName.equals(job.getTargetPackageName()) && job.isEnable()) {
+                if (packageName.equals(job.getTargetPackageName()) && job.isEnable()) {
                     job.onReceiveJob(event);
                 }
             }
@@ -170,21 +170,23 @@ public class BaseAccessibilityService extends AccessibilityService {
     }
 
 
-    /** 接收通知栏事件*/
+    /**
+     * 接收通知栏事件
+     */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public static void handeNotificationPosted(IStatusBarNotification notificationService) {
-        if(notificationService == null) {
+        if (notificationService == null) {
             return;
         }
-        if(mInstance == null || mInstance.mPkgAccessbilityJobMap == null) {
+        if (mInstance == null || mInstance.mPkgAccessbilityJobMap == null) {
             return;
         }
-        if(Config.DEBUG) {
-            Log.d(TAG, " handeNotificationPosted 事件--->" + notificationService.getPackageName() );
+        if (Config.DEBUG) {
+            Log.d(TAG, " handeNotificationPosted 事件--->" + notificationService.getPackageName());
         }
         String pack = notificationService.getPackageName();
         AccessbilityJob job = mInstance.mPkgAccessbilityJobMap.get(pack);
-        if(job == null) {
+        if (job == null) {
             return;
         }
         job.onNotificationPosted(notificationService);
@@ -192,18 +194,18 @@ public class BaseAccessibilityService extends AccessibilityService {
 
     /**
      * 判断当前服务是否启用
-     * */
+     */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static boolean isEnabled() {
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.d(TAG, " isEnabled");
         }
-        if((mInstance == null)||(mInstance.isConnect == false)){
+        if ((mInstance == null) || (mInstance.isConnect == false)) {
             return false;
         }
         AccessibilityManager accessibilityManager = (AccessibilityManager) mInstance.getSystemService(Context.ACCESSIBILITY_SERVICE);
         AccessibilityServiceInfo info = mInstance.getServiceInfo();
-        if(info == null) {
+        if (info == null) {
             return false;
         }
         List<AccessibilityServiceInfo> list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
@@ -212,31 +214,35 @@ public class BaseAccessibilityService extends AccessibilityService {
         boolean connect = false;
         while (iterator.hasNext()) {
             AccessibilityServiceInfo i = iterator.next();
-            if(i.getId().equals(info.getId())) {
+            if (i.getId().equals(info.getId())) {
                 connect = true;
                 break;
             }
         }
-        if(!connect) {
+        if (!connect) {
             return false;
         }
         return true;
     }
 
-    /** 快速读取通知栏服务是否启动*/
+    /**
+     * 快速读取通知栏服务是否启动
+     */
     public static boolean isNotificationServiceRunning() {
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.d(TAG, " isNotificationServiceRunning");
         }
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
             return false;
         }
         //部份手机没有NotificationService服务
         try {
             return BaseNotificationService.isEnabled();
-        } catch (Throwable t) {}
+        } catch (Throwable t) {
+        }
         return false;
     }
+
     /**
      * 模拟点击事件
      *

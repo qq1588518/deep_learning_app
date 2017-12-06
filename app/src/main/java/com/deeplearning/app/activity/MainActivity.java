@@ -29,15 +29,16 @@ import com.jpeng.jptabbar.anno.Titles;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.deeplearning_app.R;
 
-public class MainActivity extends BaseActivity implements BadgeDismissListener, OnTabSelectListener{
+public class MainActivity extends BaseActivity implements BadgeDismissListener, OnTabSelectListener {
     private static final String TAG = "MainActivity";
     @Titles
-    private static final String[] mTitles = {"抢红包","抢车票","秒购物","玩游戏"};
+    private static final String[] mTitles = {"抢红包", "抢车票", "秒购物", "玩游戏"};
 
     @SeleIcons
-    private static final int[] mSeleIcons = {R.drawable.tab1_selected,R.drawable.tab2_selected,R.drawable.tab3_selected,R.drawable.tab4_selected};
+    private static final int[] mSeleIcons = {R.drawable.tab1_selected, R.drawable.tab2_selected, R.drawable.tab3_selected, R.drawable.tab4_selected};
 
     @NorIcons
     private static final int[] mNormalIcons = {R.drawable.tab1_normal, R.drawable.tab2_normal, R.drawable.tab3_normal, R.drawable.tab4_normal};
@@ -82,7 +83,7 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
         list.add(mTab2);
         list.add(mTab3);
         list.add(mTab4);
-        mPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager(),list));
+        mPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager(), list));
         mTabbar.setContainer(mPager);
         mTabbar.setDismissListener(this);
         //显示圆点模式的徽章
@@ -94,7 +95,8 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
         mTabbar.getMiddleView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"深度学习",Toast.LENGTH_SHORT).show();;
+                Toast.makeText(MainActivity.this, "深度学习", Toast.LENGTH_SHORT).show();
+                ;
             }
         });
 
@@ -131,12 +133,13 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.i(TAG, "onDestroy");
         }
         try {
             unregisterReceiver(serviceConnectReceiver);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -144,18 +147,18 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
         switch (index) {
             case 0:
                 //startActivity(new Intent(MainActivity.this, WechatRedenvelopeActivity.class));
-                Toast.makeText(MainActivity.this,"Tab" + index,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Tab" + index, Toast.LENGTH_SHORT).show();
                 break;
             case 2:
-                Toast.makeText(MainActivity.this,"Tab" + index,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Tab" + index, Toast.LENGTH_SHORT).show();
                 //startActivity(new Intent(MainActivity.this, NotifySettingsActivity.class));
                 break;
             case 3:
-                Toast.makeText(MainActivity.this,"Tab" + index,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Tab" + index, Toast.LENGTH_SHORT).show();
                 //startActivity(new Intent(MainActivity.this, WechatSettingsActivity.class));
                 break;
             case 4:
-                Toast.makeText(MainActivity.this,"Tab" + index,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Tab" + index, Toast.LENGTH_SHORT).show();
                 //startActivity(new Intent(MainActivity.this, WechatSettingsActivity.class));
                 break;
         }
@@ -164,28 +167,25 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
     private BroadcastReceiver serviceConnectReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(isFinishing()) {
+            if (isFinishing()) {
                 return;
             }
             String action = intent.getAction();
             Log.d(TAG, "receive-->" + action);
-            if(Config.ACTION_ACCESSBILITY_SERVICE_CONNECT.equals(action)) {
-                if(mTab1 != null) {
+            if (Config.ACTION_ACCESSBILITY_SERVICE_CONNECT.equals(action)) {
+                if (mTab1 != null) {
                     mTab1.updateAccessibilityPreference();
                 }
-            }
-            else if(Config.ACTION_ACCESSBILITY_SERVICE_DISCONNECT.equals(action)) {
-                if(mTab1 != null) {
+            } else if (Config.ACTION_ACCESSBILITY_SERVICE_DISCONNECT.equals(action)) {
+                if (mTab1 != null) {
                     mTab1.showOpenAccessibilityServiceDialog();
                 }
-            }
-            else if(Config.ACTION_NOTIFY_LISTENER_SERVICE_CONNECT.equals(action)) {
-                if(mTab1 != null) {
+            } else if (Config.ACTION_NOTIFY_LISTENER_SERVICE_CONNECT.equals(action)) {
+                if (mTab1 != null) {
                     mTab1.updateNotifyPreference();
                 }
-            }
-            else if(Config.ACTION_NOTIFY_LISTENER_SERVICE_DISCONNECT.equals(action)) {
-                if(mTab1 != null) {
+            } else if (Config.ACTION_NOTIFY_LISTENER_SERVICE_DISCONNECT.equals(action)) {
+                if (mTab1 != null) {
                     mTab1.updateNotifyPreference();
                 }
             }

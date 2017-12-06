@@ -24,6 +24,7 @@ import com.deeplearning.app.service.BaseNotificationService;
 import com.deeplearning.app.util.AccessibilityHelper;
 import com.deeplearning.app.util.NotifyHelper;
 import com.deeplearning.app.DLApplication;
+
 import java.util.List;
 
 /**
@@ -33,11 +34,15 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
 
     private static final String TAG = "WechatAccessbilityJob";
 
-    /** 红包消息的关键字*/
+    /**
+     * 红包消息的关键字
+     */
     private static final String LUCKYMONEY_TEXT_KEY = "[微信红包]";
 
 
-    /** 不能再使用文字匹配的最小版本号 */
+    /**
+     * 不能再使用文字匹配的最小版本号
+     */
     private static final int USE_ID_MIN_VERSION = 700;// 6.3.8 对应code为680,6.3.9对应code为700
 
     private static final int WINDOW_NONE = 0;
@@ -79,7 +84,8 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
     public void onStopJob() {
         try {
             getContext().unregisterReceiver(broadcastReceiver);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -105,29 +111,29 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
         final int eventType = event.getEventType();
         String packageName = String.valueOf(event.getPackageName());
         //通知栏事件
-        if(eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
+        if (eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
             Parcelable data = event.getParcelableData();
-            if(data == null || !(data instanceof Notification)) {
-                Log.d(TAG,packageName);
+            if (data == null || !(data instanceof Notification)) {
+                Log.d(TAG, packageName);
                 return;
             }
-            if(BaseAccessibilityService.isNotificationServiceRunning() && getConfig().isEnableNotificationService()) { //开启快速模式，不处理
-                Log.d(TAG,packageName);
+            if (BaseAccessibilityService.isNotificationServiceRunning() && getConfig().isEnableNotificationService()) { //开启快速模式，不处理
+                Log.d(TAG, packageName);
                 return;
             }
             List<CharSequence> texts = event.getText();
-            if(!texts.isEmpty()) {
+            if (!texts.isEmpty()) {
                 String text = String.valueOf(texts.get(0));
                 notificationEvent(text, (Notification) data);
             }
-        } else if(eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+        } else if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             openLuckyMoneyEvent(event);
-        } else if(eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
-            if(mCurrentWindow != WINDOW_LAUNCHER) { //不在聊天界面或聊天列表，不处理
-                Log.d(TAG,packageName);
+        } else if (eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+            if (mCurrentWindow != WINDOW_LAUNCHER) { //不在聊天界面或聊天列表，不处理
+                Log.d(TAG, packageName);
                 return;
             }
-            if(isReceivingLuckyMoney) {
+            if (isReceivingLuckyMoney) {
                 //handleChatListLuckyMoney();
                 //点中了红包，下一步就是去拆红包
                 handleLuckyMoneyReceive();
@@ -135,45 +141,47 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
         }
     }
 
-    /** 是否为群聊天*/
+    /**
+     * 是否为群聊天
+     */
     private boolean isMemberChatUi(AccessibilityNodeInfo nodeInfo) {
-        if(nodeInfo == null) {
+        if (nodeInfo == null) {
             return false;
         }
         String id = "com.tencent.mm:id/ces";
         int wv = getWechatVersion();
-        if(wv <= 680) {
+        if (wv <= 680) {
             id = "com.tencent.mm:id/ew";
-        } else if(wv <= 700) {
+        } else if (wv <= 700) {
             id = "com.tencent.mm:id/cbo";
         }
         String title = null;
         AccessibilityNodeInfo target = AccessibilityHelper.findNodeInfosById(nodeInfo, id);
-        if(target != null) {
+        if (target != null) {
             title = String.valueOf(target.getText());
         }
         List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("返回");
 
-        if(list != null && !list.isEmpty()) {
+        if (list != null && !list.isEmpty()) {
             AccessibilityNodeInfo parent = null;
-            for(AccessibilityNodeInfo node : list) {
-                if(!Config.IMAGEVIEW_CLASS_NAME.equals(node.getClassName())) {
+            for (AccessibilityNodeInfo node : list) {
+                if (!Config.IMAGEVIEW_CLASS_NAME.equals(node.getClassName())) {
                     continue;
                 }
                 String desc = String.valueOf(node.getContentDescription());
-                if(!"返回".equals(desc)) {
+                if (!"返回".equals(desc)) {
                     continue;
                 }
                 parent = node.getParent();
                 break;
             }
-            if(parent != null) {
+            if (parent != null) {
                 parent = parent.getParent();
             }
-            if(parent != null) {
-                if( parent.getChildCount() >= 2) {
+            if (parent != null) {
+                if (parent.getChildCount() >= 2) {
                     AccessibilityNodeInfo node = parent.getChild(1);
-                    if(Config.TEXTVIEW_CLASS_NAME.equals(node.getClassName())) {
+                    if (Config.TEXTVIEW_CLASS_NAME.equals(node.getClassName())) {
                         title = String.valueOf(node.getText());
                     }
                 }
@@ -181,26 +189,30 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
         }
 
 
-        if(title != null && title.endsWith(")")) {
+        if (title != null && title.endsWith(")")) {
             return true;
         }
         return false;
     }
 
-    /** 通知栏事件*/
+    /**
+     * 通知栏事件
+     */
     private void notificationEvent(String ticker, Notification nf) {
         String text = ticker;
         int index = text.indexOf(":");
-        if(index != -1) {
+        if (index != -1) {
             text = text.substring(index + 1);
         }
         text = text.trim();
-        if(text.contains(LUCKYMONEY_TEXT_KEY)) { //红包消息
+        if (text.contains(LUCKYMONEY_TEXT_KEY)) { //红包消息
             newLuckyMoneyNotification(nf);
         }
     }
 
-    /** 打开通知栏消息*/
+    /**
+     * 打开通知栏消息
+     */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void newLuckyMoneyNotification(Notification notification) {
         //isReceivingLuckyMoney = true;
@@ -208,47 +220,47 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
         PendingIntent pendingIntent = notification.contentIntent;
         boolean lock = NotifyHelper.isLockScreen(getContext());
 
-        if(!lock) {
+        if (!lock) {
             NotifyHelper.send(pendingIntent);
         } else {
             NotifyHelper.showNotify(getContext(), String.valueOf(notification.tickerText), pendingIntent);
         }
 
-        if(lock || getConfig().getWechatMode() != Config.WX_MODE_0) {
+        if (lock || getConfig().getWechatMode() != Config.WX_MODE_0) {
             NotifyHelper.playEffect(getContext(), getConfig());
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void openLuckyMoneyEvent(AccessibilityEvent event) {
-        String className =  event.getClassName().toString();
-        if((className.length()>=Config.LuckyMoneyReceiveUI.length())&&(Config.LuckyMoneyReceiveUI.equals(className.substring(0,Config.LuckyMoneyReceiveUI.length())))) {
+        String className = event.getClassName().toString();
+        if ((className.length() >= Config.LuckyMoneyReceiveUI.length()) && (Config.LuckyMoneyReceiveUI.equals(className.substring(0, Config.LuckyMoneyReceiveUI.length())))) {
             mCurrentWindow = WINDOW_LUCKYMONEY_RECEIVEUI;
             //点中了红包，下一步就是去拆红包
             handleLuckyMoneyReceive();
-        } else if((className.length()>=Config.LuckyMoneyDetailUI.length())&&(Config.LuckyMoneyDetailUI.equals(className.substring(0,Config.LuckyMoneyDetailUI.length())))) {
+        } else if ((className.length() >= Config.LuckyMoneyDetailUI.length()) && (Config.LuckyMoneyDetailUI.equals(className.substring(0, Config.LuckyMoneyDetailUI.length())))) {
             mCurrentWindow = WINDOW_LUCKYMONEY_DETAIL;
             //拆完红包后看详细的纪录界面
-            if(getConfig().getWechatAfterGetLuckyMoneyEvent() == Config.WX_AFTER_GET_GOHOME) { //返回主界面，以便收到下一次的红包通知
+            if (getConfig().getWechatAfterGetLuckyMoneyEvent() == Config.WX_AFTER_GET_GOHOME) { //返回主界面，以便收到下一次的红包通知
                 AccessibilityHelper.performHome(getService());
             }
-        } else if((className.length()>=Config.LauncherUI.length())&&(Config.LauncherUI.equals(className.substring(0,Config.LauncherUI.length())))) {
+        } else if ((className.length() >= Config.LauncherUI.length()) && (Config.LauncherUI.equals(className.substring(0, Config.LauncherUI.length())))) {
             mCurrentWindow = WINDOW_LAUNCHER;
             //在聊天界面,去点中红包
             handleChatListLuckyMoney();
         } else {
-            Log.d(TAG,className);
+            Log.d(TAG, className);
             mCurrentWindow = WINDOW_OTHER;
         }
     }
 
     /**
      * 点击聊天里的红包后，显示的界面
-     * */
+     */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void handleLuckyMoneyReceive() {
         AccessibilityNodeInfo nodeInfo = getService().getRootInActiveWindow();
-        if(nodeInfo == null) {
+        if (nodeInfo == null) {
             Log.w(TAG, "rootWindow为空");
             return;
         }
@@ -257,25 +269,25 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
 
         int event = getConfig().getWechatAfterOpenLuckyMoneyEvent();
         int wechatVersion = getWechatVersion();
-        if(event == Config.WX_AFTER_OPEN_LUCKYMONEY) { //拆红包
+        if (event == Config.WX_AFTER_OPEN_LUCKYMONEY) { //拆红包
             if (wechatVersion < USE_ID_MIN_VERSION) {
                 targetNode = AccessibilityHelper.findNodeInfosByText(nodeInfo, "拆红包");
             } else {
                 String buttonId = "com.tencent.mm:id/b43";
 
-                if(wechatVersion == 700) {
+                if (wechatVersion == 700) {
                     buttonId = "com.tencent.mm:id/b2c";
                 }
 
-                if(buttonId != null) {
+                if (buttonId != null) {
                     targetNode = AccessibilityHelper.findNodeInfosById(nodeInfo, buttonId);
                 }
 
-                if(targetNode == null) {
+                if (targetNode == null) {
                     //分别对应固定金额的红包 拼手气红包
                     AccessibilityNodeInfo textNode = AccessibilityHelper.findNodeInfosByTexts(nodeInfo, "发了一个红包", "给你发了一个红包", "发了一个红包，金额随机");
 
-                    if(textNode != null) {
+                    if (textNode != null) {
                         for (int i = 0; i < textNode.getChildCount(); i++) {
                             AccessibilityNodeInfo node = textNode.getChild(i);
                             if (Config.BUTTON_CLASS_NAME.equals(node.getClassName())) {
@@ -286,22 +298,22 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
                     }
                 }
 
-                if(targetNode == null) { //通过组件查找
+                if (targetNode == null) { //通过组件查找
                     targetNode = AccessibilityHelper.findNodeInfosByClassName(nodeInfo, Config.BUTTON_CLASS_NAME);
                 }
             }
-        } else if(event == Config.WX_AFTER_OPEN_SEE) { //看一看
-            if(getWechatVersion() < USE_ID_MIN_VERSION) { //低版本才有 看大家手气的功能
+        } else if (event == Config.WX_AFTER_OPEN_SEE) { //看一看
+            if (getWechatVersion() < USE_ID_MIN_VERSION) { //低版本才有 看大家手气的功能
                 targetNode = AccessibilityHelper.findNodeInfosByText(nodeInfo, "看看大家的手气");
             }
-        } else if(event == Config.WX_AFTER_OPEN_NONE) {
+        } else if (event == Config.WX_AFTER_OPEN_NONE) {
             return;
         }
 
-        if(targetNode != null) {
+        if (targetNode != null) {
             final AccessibilityNodeInfo n = targetNode;
             long sDelayTime = getConfig().getWechatOpenDelayTime();
-            if(sDelayTime != 0) {
+            if (sDelayTime != 0) {
                 getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -311,7 +323,7 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
             } else {
                 AccessibilityHelper.performClick(n);
             }
-            if(event == Config.WX_AFTER_OPEN_LUCKYMONEY) {
+            if (event == Config.WX_AFTER_OPEN_LUCKYMONEY) {
                 DLApplication.eventStatistics(getContext(), "open_luckymoney");
             } else {
                 DLApplication.eventStatistics(getContext(), "open_see");
@@ -321,67 +333,71 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
 
     /**
      * 收到聊天里的红包
-     * */
+     */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void handleChatListLuckyMoney() {
         int mode = getConfig().getWechatMode();
-        if(mode == Config.WX_MODE_3) { //只通知模式
+        if (mode == Config.WX_MODE_3) { //只通知模式
             return;
         }
 
         AccessibilityNodeInfo nodeInfo = getService().getRootInActiveWindow();
-        if(nodeInfo == null) {
+        if (nodeInfo == null) {
             Log.w(TAG, "rootWindow为空");
             return;
         }
 
-        if(mode != Config.WX_MODE_0) {
+        if (mode != Config.WX_MODE_0) {
             boolean isMember = isMemberChatUi(nodeInfo);
-            if(mode == Config.WX_MODE_1 && isMember) {//过滤群聊
+            if (mode == Config.WX_MODE_1 && isMember) {//过滤群聊
                 return;
-            } else if(mode == Config.WX_MODE_2 && !isMember) { //过滤单聊
+            } else if (mode == Config.WX_MODE_2 && !isMember) { //过滤单聊
                 return;
             }
         }
 
         List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("领取红包");
 
-        if(list != null && list.isEmpty()) {
+        if (list != null && list.isEmpty()) {
             // 从消息列表查找红包
             AccessibilityNodeInfo node = AccessibilityHelper.findNodeInfosByText(nodeInfo, "[微信红包]");
-            if(node != null) {
-                if(Config.DEBUG) {
+            if (node != null) {
+                if (Config.DEBUG) {
                     Log.i(TAG, "-->微信红包:" + node);
                 }
                 isReceivingLuckyMoney = true;
                 AccessibilityHelper.performClick(nodeInfo);
             }
-        } else if(list != null) {
+        } else if (list != null) {
             //if (!isReceivingLuckyMoney){
-                //最新的红包领起
-                AccessibilityNodeInfo node = list.get(list.size() - 1);
-                AccessibilityHelper.performClick(node);
-                isReceivingLuckyMoney = true;
+            //最新的红包领起
+            AccessibilityNodeInfo node = list.get(list.size() - 1);
+            AccessibilityHelper.performClick(node);
+            isReceivingLuckyMoney = true;
             //}
         }
     }
 
     private Handler getHandler() {
-        if(mHandler == null) {
+        if (mHandler == null) {
             mHandler = new Handler(Looper.getMainLooper());
         }
         return mHandler;
     }
 
-    /** 获取微信的版本*/
+    /**
+     * 获取微信的版本
+     */
     private int getWechatVersion() {
-        if(mWechatPackageInfo == null) {
+        if (mWechatPackageInfo == null) {
             return 0;
         }
         return mWechatPackageInfo.versionCode;
     }
 
-    /** 更新微信包信息*/
+    /**
+     * 更新微信包信息
+     */
     private void updatePackageInfo() {
         try {
             mWechatPackageInfo = getContext().getPackageManager().getPackageInfo(Config.WECHAT_PACKAGENAME, 0);

@@ -31,23 +31,23 @@ public class BaseNotificationService extends NotificationListenerService {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.i(TAG, "onCreate");
         }
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             onListenerConnected();
         }
     }
 
     @Override
     public void onNotificationPosted(final StatusBarNotification sbn) {
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.i(TAG, "onNotificationPosted");
         }
-        if(!getConfig().isAgreement()) {
+        if (!getConfig().isAgreement()) {
             return;
         }
-        if(!getConfig().isEnableNotificationService()) {
+        if (!getConfig().isEnableNotificationService()) {
             return;
         }
         BaseAccessibilityService.handeNotificationPosted(new IStatusBarNotification() {
@@ -65,20 +65,20 @@ public class BaseNotificationService extends NotificationListenerService {
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             super.onNotificationRemoved(sbn);
         }
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.i(TAG, "onNotificationRemoved");
         }
     }
 
     @Override
     public void onListenerConnected() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             super.onListenerConnected();
         }
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.i(TAG, " onListenerConnected");
         }
         isConnect = true;
@@ -90,7 +90,7 @@ public class BaseNotificationService extends NotificationListenerService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.i(TAG, " onDestroy");
         }
         isConnect = false;
@@ -100,12 +100,14 @@ public class BaseNotificationService extends NotificationListenerService {
         sendBroadcast(intent);
     }
 
-    /** 是否启动通知栏监听*/
+    /**
+     * 是否启动通知栏监听
+     */
     public static boolean isEnabled() {
-        if(Config.DEBUG) {
+        if (Config.DEBUG) {
             Log.d(TAG, " isEnabled");
         }
-        if((mInstance == null)||(mInstance.isConnect == false)){
+        if ((mInstance == null) || (mInstance.isConnect == false)) {
             return false;
         }
         return true;

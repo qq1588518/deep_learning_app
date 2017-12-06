@@ -110,7 +110,7 @@ public class AutoReplyAccessibilityService extends BaseAccessibilityService {
                 if (!hasAction) break;
                 itemNodeinfo = null;
                 String className = event.getClassName().toString();
-                if (Config.LauncherUI.equals(className.substring(0,Config.LauncherUI.length()))) {
+                if (Config.LauncherUI.equals(className.substring(0, Config.LauncherUI.length()))) {
                     if (fill()) {
                         send();
                     } else {
@@ -210,6 +210,7 @@ public class AutoReplyAccessibilityService extends BaseAccessibilityService {
             }
         }
     }
+
     private boolean fill() {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         if (rootNode != null) {
