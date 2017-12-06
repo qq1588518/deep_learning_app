@@ -108,13 +108,16 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
     @Override
     public void onReceiveJob(AccessibilityEvent event) {
         final int eventType = event.getEventType();
+        String packageName = String.valueOf(event.getPackageName());
         //通知栏事件
         if(eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
             Parcelable data = event.getParcelableData();
             if(data == null || !(data instanceof Notification)) {
+                Log.d(TAG,packageName);
                 return;
             }
             if(BaseAccessibilityService.isNotificationServiceRunning() && getConfig().isEnableNotificationService()) { //开启快速模式，不处理
+                Log.d(TAG,packageName);
                 return;
             }
             List<CharSequence> texts = event.getText();
@@ -126,6 +129,7 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
             openHongBao(event);
         } else if(eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
             if(mCurrentWindow != WINDOW_LAUNCHER) { //不在聊天界面或聊天列表，不处理
+                Log.d(TAG,packageName);
                 return;
             }
             if(isReceivingHongbao) {
@@ -234,7 +238,12 @@ public class WechatAccessbilityJob extends BaseAccessbilityJob {
             mCurrentWindow = WINDOW_LAUNCHER;
             //在聊天界面,去点中红包
             handleChatListHongBao();
+        }else if("com.tencent.mm.plugin.chatroom.ui.ChatroomInfoUI".equals(event.getClassName())) {
+            mCurrentWindow = WINDOW_OTHER;
+            //在聊天界面,去点中红包
+            Log.d(TAG,event.toString());
         } else {
+            Log.d(TAG,event.toString());
             mCurrentWindow = WINDOW_OTHER;
         }
     }

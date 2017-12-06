@@ -98,7 +98,7 @@ public class BaseAccessibilityService extends AccessibilityService {
         mPkgAccessbilityJobMap = null;
         mInstance = null;
         //发送广播，已经断开辅助服务
-        Intent intent = new Intent(com.deeplearning.app.config.Config.ACTION_QIANGHONGBAO_SERVICE_DISCONNECT);
+        Intent intent = new Intent(com.deeplearning.app.config.Config.ACTION_ACCESSBILITY_SERVICE_DISCONNECT);
         sendBroadcast(intent);
     }
 
@@ -118,7 +118,7 @@ public class BaseAccessibilityService extends AccessibilityService {
         }
         isConnect = true;
         //发送广播，已经连接上了
-        Intent intent = new Intent(com.deeplearning.app.config.Config.ACTION_QIANGHONGBAO_SERVICE_CONNECT);
+        Intent intent = new Intent(com.deeplearning.app.config.Config.ACTION_ACCESSBILITY_SERVICE_CONNECT);
         sendBroadcast(intent);
         Toast.makeText(this, "已连接抢红包服务", Toast.LENGTH_SHORT).show();
     }
@@ -128,13 +128,13 @@ public class BaseAccessibilityService extends AccessibilityService {
         if(Config.DEBUG) {
             Log.d(TAG, " onAccessibilityEvent 事件--->" + event );
         }
-        String pkn = String.valueOf(event.getPackageName());
+        String packageName = String.valueOf(event.getPackageName());
         if(mAccessbilityJobs != null && !mAccessbilityJobs.isEmpty()) {
             if(!getConfig().isAgreement()) {
                 return;
             }
             for (AccessbilityJob job : mAccessbilityJobs) {
-                if(pkn.equals(job.getTargetPackageName()) && job.isEnable()) {
+                if(packageName.equals(job.getTargetPackageName()) && job.isEnable()) {
                     job.onReceiveJob(event);
                 }
             }

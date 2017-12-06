@@ -33,9 +33,9 @@ import com.deeplearning_app.R;
  */
 public class Tab1PagerFragment extends Fragment {
     private static final String TAG = "Tab1PagerFragment";
+    private boolean accessibilityChangeByUser = true;
     private boolean notificationChangeByUser = true;
-
-    private Switch mSwitchAssistantSetting;
+    private Switch mSwitchAccessSetting;
     private Switch mSwitchNotifySetting;
     private Switch mSwitchWechatSetting;
     private Dialog mTipsDialog;
@@ -44,11 +44,16 @@ public class Tab1PagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab1, container, false);
-        mSwitchAssistantSetting = (Switch) rootView.findViewById(R.id.ID_ASSISTANT_SETTINGS);
+        mSwitchAccessSetting = (Switch) rootView.findViewById(R.id.ID_ASSISTANT_SETTINGS);
         // 添加监听
-        mSwitchAssistantSetting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mSwitchAccessSetting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!accessibilityChangeByUser) {
+                    accessibilityChangeByUser = true;
+                    return;
+                }
+                Config.getConfig(getActivity()).setAccessibilityServiceEnable(isChecked);
                 if (isChecked){
                     Toast.makeText(getActivity(),"辅助功能服务开启",Toast.LENGTH_SHORT).show();
                     if(!BaseAccessibilityService.isEnabled()) {
@@ -57,6 +62,7 @@ public class Tab1PagerFragment extends Fragment {
                 }else {
                     Toast.makeText(getActivity(),"辅助功能服务关闭",Toast.LENGTH_SHORT).show();
                 }
+                DLApplication.eventStatistics(getActivity(), "access_service", String.valueOf(isChecked));
             }
         });
 
@@ -86,12 +92,14 @@ public class Tab1PagerFragment extends Fragment {
         mSwitchWechatSetting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Config.getConfig(getActivity()).setEnableWechat(isChecked);
                 if (isChecked){
                     Toast.makeText(getActivity(),"微信抢红包设置开启",Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), WechatSettingsActivity.class));
                 }else {
                     Toast.makeText(getActivity(),"微信抢红包设置关闭",Toast.LENGTH_SHORT).show();
                 }
+                DLApplication.eventStatistics(getActivity(), "wechat_enable", String.valueOf(isChecked));
             }
         });
 
@@ -105,7 +113,7 @@ public class Tab1PagerFragment extends Fragment {
             Log.i(TAG, "onResume");
         }
         if(BaseAccessibilityService.isEnabled()) {
-            dismiss();
+            updateAccessibilityPreference();
         } else {
             showOpenAccessibilityServiceDialog();
         }
@@ -195,9 +203,32 @@ public class Tab1PagerFragment extends Fragment {
             e.printStackTrace();
         }
     }
+    /** 更新快速读取通知的设置*/
+    public void updateAccessibilityPreference() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "updateAccessibilityPreference");
+        }
+        dismiss();
+        if(mSwitchAccessSetting == null) {
+            return;
+        }
+        boolean running = BaseAccessibilityService.isEnabled();
+        boolean enable = Config.getConfig(getActivity()).isEnableAccessibilityService();
+        if( enable && running && !mSwitchAccessSetting.isChecked()) {
+            DLApplication.eventStatistics(getActivity(), "access_service", String.valueOf(true));
+            accessibilityChangeByUser = false;
+            mSwitchAccessSetting.setChecked(true);
+        } else if((!enable || !running) && mSwitchAccessSetting.isChecked()) {
+            mSwitchAccessSetting.setChecked(false);
+            accessibilityChangeByUser = false;
+        }
+    }
 
     /** 更新快速读取通知的设置*/
     public void updateNotifyPreference() {
+        if(Config.DEBUG) {
+            Log.i(TAG, "updateNotifyPreference");
+        }
         if(mSwitchNotifySetting == null) {
             return;
         }
@@ -234,7 +265,7 @@ public class Tab1PagerFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 Config.getConfig(getContext()).setAgreement(false);
                 DLApplication.eventStatistics(getActivity(), "agreement", "false");
-                //finish();
+                dismiss();
             }
         });
         builder.show();

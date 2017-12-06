@@ -94,5 +94,4 @@ public class ScreenRecordListenerService extends Service {
 
         }
     };
-
 }

@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.deeplearning.app.DLApplication;
@@ -61,6 +63,10 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 无title
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // 全屏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         mTabbar = (JPTabBar) findViewById(R.id.tabbar);
         mPager = (ViewPager) findViewById(R.id.view_pager);
@@ -95,11 +101,24 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
         DLApplication.activityStartMain(this);
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Config.ACTION_QIANGHONGBAO_SERVICE_CONNECT);
-        filter.addAction(Config.ACTION_QIANGHONGBAO_SERVICE_DISCONNECT);
+        filter.addAction(Config.ACTION_ACCESSBILITY_SERVICE_CONNECT);
+        filter.addAction(Config.ACTION_ACCESSBILITY_SERVICE_DISCONNECT);
         filter.addAction(Config.ACTION_NOTIFY_LISTENER_SERVICE_DISCONNECT);
         filter.addAction(Config.ACTION_NOTIFY_LISTENER_SERVICE_CONNECT);
-        registerReceiver(qhbConnectReceiver, filter);
+        registerReceiver(serviceConnectReceiver, filter);
+
+//        new Thread() {
+//            public void run() {
+//                try {
+//                    /*  10秒后关闭页面*/
+//                    sleep(10000);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    finish(); // 关闭页面
+//                }
+//            }
+//        }.start();
     }
 
     @Override
@@ -116,7 +135,7 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
             Log.i(TAG, "onDestroy");
         }
         try {
-            unregisterReceiver(qhbConnectReceiver);
+            unregisterReceiver(serviceConnectReceiver);
         } catch (Exception e) {}
     }
 
@@ -142,7 +161,7 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
         }
     }
 
-    private BroadcastReceiver qhbConnectReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver serviceConnectReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(isFinishing()) {
@@ -150,11 +169,15 @@ public class MainActivity extends BaseActivity implements BadgeDismissListener, 
             }
             String action = intent.getAction();
             Log.d(TAG, "receive-->" + action);
-            if(Config.ACTION_QIANGHONGBAO_SERVICE_CONNECT.equals(action)) {
-                mTab1.dismiss();
+            if(Config.ACTION_ACCESSBILITY_SERVICE_CONNECT.equals(action)) {
+                if(mTab1 != null) {
+                    mTab1.updateAccessibilityPreference();
+                }
             }
-            else if(Config.ACTION_QIANGHONGBAO_SERVICE_DISCONNECT.equals(action)) {
-                mTab1.showOpenAccessibilityServiceDialog();
+            else if(Config.ACTION_ACCESSBILITY_SERVICE_DISCONNECT.equals(action)) {
+                if(mTab1 != null) {
+                    mTab1.showOpenAccessibilityServiceDialog();
+                }
             }
             else if(Config.ACTION_NOTIFY_LISTENER_SERVICE_CONNECT.equals(action)) {
                 if(mTab1 != null) {

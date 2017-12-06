@@ -15,11 +15,14 @@ public class Config {
     public static final int VERSION_CODE = 1;
     public static final String VERSION_NAME = "1.0";
 
-    public static final String ACTION_QIANGHONGBAO_SERVICE_DISCONNECT = "com.deeplearning_app.ACCESSBILITY_DISCONNECT";
-    public static final String ACTION_QIANGHONGBAO_SERVICE_CONNECT = "com.deeplearning_app.ACCESSBILITY_CONNECT";
+    public static final String ACTION_ACCESSBILITY_SERVICE_DISCONNECT = "com.deeplearning_app.ACCESSBILITY_DISCONNECT";
+    public static final String ACTION_ACCESSBILITY_SERVICE_CONNECT = "com.deeplearning_app.ACCESSBILITY_CONNECT";
 
     public static final String ACTION_NOTIFY_LISTENER_SERVICE_DISCONNECT = "com.deeplearning_app.NOTIFY_LISTENER_DISCONNECT";
     public static final String ACTION_NOTIFY_LISTENER_SERVICE_CONNECT = "com.deeplearning_app.NOTIFY_LISTENER_CONNECT";
+
+    public static final String KEY_ACCESSIBILITY_SERVICE_ENABLE = "KEY_ACCESSIBILITY_SERVICE_ENABLE";
+    public static final String KEY_NOTIFICATION_SERVICE_ENABLE = "KEY_NOTIFICATION_SERVICE_ENABLE";
 
     public static final String PREFERENCE_NAME = "config";
     public static final String KEY_ENABLE_WECHAT = "KEY_ENABLE_WECHAT";
@@ -27,8 +30,6 @@ public class Config {
     public static final String KEY_WECHAT_DELAY_TIME = "KEY_WECHAT_DELAY_TIME";
     public static final String KEY_WECHAT_AFTER_GET_HONGBAO = "KEY_WECHAT_AFTER_GET_HONGBAO";
     public static final String KEY_WECHAT_MODE = "KEY_WECHAT_MODE";
-
-    public static final String KEY_NOTIFICATION_SERVICE_ENABLE = "KEY_NOTIFICATION_SERVICE_ENABLE";
 
     public static final String KEY_NOTIFY_SOUND = "KEY_NOTIFY_SOUND";
     public static final String KEY_NOTIFY_VIBRATE = "KEY_NOTIFY_VIBRATE";
@@ -65,9 +66,32 @@ public class Config {
         preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
 
+    /** 是否启动通知栏模式*/
+    public boolean isEnableAccessibilityService() {
+        return preferences.getBoolean(KEY_ACCESSIBILITY_SERVICE_ENABLE, false);
+    }
+
+    public void setAccessibilityServiceEnable(boolean enable) {
+        preferences.edit().putBoolean(KEY_ACCESSIBILITY_SERVICE_ENABLE, enable).apply();
+    }
+
+    /** 是否启动通知栏模式*/
+    public boolean isEnableNotificationService() {
+        return preferences.getBoolean(KEY_NOTIFICATION_SERVICE_ENABLE, false);
+    }
+
+    public void setNotificationServiceEnable(boolean enable) {
+        preferences.edit().putBoolean(KEY_NOTIFICATION_SERVICE_ENABLE, enable).apply();
+    }
+
     /** 是否启动微信抢红包*/
     public boolean isEnableWechat() {
         return preferences.getBoolean(KEY_ENABLE_WECHAT, true);
+    }
+
+    /** 是否启动微信抢红包*/
+    public void setEnableWechat(boolean enable) {
+        preferences.edit().putBoolean(KEY_ENABLE_WECHAT, enable).apply();
     }
 
     /** 微信打开红包后的事件*/
@@ -108,15 +132,6 @@ public class Config {
             return Integer.parseInt(result);
         } catch (Exception e) {}
         return defaultValue;
-    }
-
-    /** 是否启动通知栏模式*/
-    public boolean isEnableNotificationService() {
-        return preferences.getBoolean(KEY_NOTIFICATION_SERVICE_ENABLE, false);
-    }
-
-    public void setNotificationServiceEnable(boolean enable) {
-        preferences.edit().putBoolean(KEY_NOTIFICATION_SERVICE_ENABLE, enable).apply();
     }
 
     /** 是否开启声音*/
