@@ -408,7 +408,7 @@ public class BaseAccessibilityService extends AccessibilityService {
         for (int i = 0; i < nodes.size(); i++) {
             AccessibilityNodeInfo node = nodes.get(i);
             // 执行按钮点击行为
-            if (node.getClassName().equals("android.widget.Button") && node.isEnabled()) {
+            if (node.getClassName().equals(Config.BUTTON_CLASS_NAME) && node.isEnabled()) {
                 node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
@@ -422,7 +422,7 @@ public class BaseAccessibilityService extends AccessibilityService {
         for (int i = 0; i < nodes.size(); i++) {
             AccessibilityNodeInfo node = nodes.get(i);
             // 执行按钮点击行为
-            if (node.getClassName().equals("android.widget.TextView") && node.isEnabled()) {
+            if (node.getClassName().equals(Config.TEXTVIEW_CLASS_NAME) && node.isEnabled()) {
                 node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }

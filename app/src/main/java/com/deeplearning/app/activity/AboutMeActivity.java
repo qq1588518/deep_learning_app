@@ -130,7 +130,7 @@ public class AboutMeActivity extends BaseActivity {
 
                 //跳到微信
                 Intent wxIntent = getPackageManager().getLaunchIntentForPackage(
-                        WechatAccessbilityJob.WECHAT_PACKAGENAME);
+                        Config.WECHAT_PACKAGENAME);
                 if(wxIntent != null) {
                     try {
                         startActivity(wxIntent);

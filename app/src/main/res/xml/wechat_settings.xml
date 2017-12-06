@@ -45,8 +45,8 @@
         <ListPreference
             android:title="打开红包后"
             android:defaultValue="0"
-            android:summary="@string/after_open_hongbao"
-            android:key="KEY_WECHAT_AFTER_OPEN_HONGBAO"
+            android:summary="@string/after_open_luckymoney"
+            android:key="KEY_WECHAT_AFTER_OPEN_LUCKYMONEY"
             android:dialogTitle="设置打开红包后要执行的事件"
             android:entries="@array/wechat_after_open_settings_titles"
             android:entryValues="@array/wechat_after_open_settings_values"/>
@@ -55,7 +55,7 @@
             android:title="抢到红包后"
             android:defaultValue="1"
             android:summary="@string/after_get_none"
-            android:key="KEY_WECHAT_AFTER_GET_HONGBAO"
+            android:key="KEY_WECHAT_AFTER_GET_LUCKYMONEY"
             android:dialogTitle="设置打开红包后要执行的事件"
             android:entries="@array/wechat_after_get_settings_titles"
             android:entryValues="@array/wechat_after_get_settings_values"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="wechat_after_open_settings_titles">
-        <item>@string/after_open_hongbao</item>
+        <item>@string/after_open_luckymoney</item>
         <item>@string/after_open_see</item>
         <item>@string/after_open_none</item>
     </string-array>

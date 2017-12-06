@@ -91,7 +91,7 @@ public class ScreenRecordActivity extends BaseActivity implements View.OnClickLi
         }
         setContentView(R.layout.activity_screen);
         mPackageManager = this.getPackageManager();
-        mPackages = new String[]{"com.tencent.mm"};
+        mPackages = new String[]{Config.WECHAT_PACKAGENAME};
         mButton = (Button) findViewById(R.id.button);
         mRtmpAddET = (EditText) findViewById(R.id.et_rtmp_address);
         mButton.setOnClickListener(this);
@@ -269,7 +269,7 @@ public class ScreenRecordActivity extends BaseActivity implements View.OnClickLi
         if(Config.DEBUG) {
             Log.d(TAG, "goApp");
         }
-        Intent intent = mPackageManager.getLaunchIntentForPackage("com.tencent.mm");
+        Intent intent = mPackageManager.getLaunchIntentForPackage(Config.WECHAT_PACKAGENAME);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

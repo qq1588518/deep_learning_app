@@ -19,6 +19,8 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.util.Log;
 
+import com.deeplearning.app.config.Config;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -27,7 +29,7 @@ import java.util.List;
  */
 public class AutoReplyAccessibilityService extends BaseAccessibilityService {
     private static final String TAG = "AutoReplyAccessibility";
-    private final static String MM_PNAME = "com.tencent.mm";
+
     boolean hasAction = false;
     boolean locked = false;
     boolean background = false;
@@ -59,7 +61,7 @@ public class AutoReplyAccessibilityService extends BaseAccessibilityService {
                                 locked = true;
                                 wakeAndUnlock();
                                 Log.d(TAG, "the screen is locked");
-                                if (isAppForeground(MM_PNAME)) {
+                                if (isAppForeground(Config.WECHAT_PACKAGENAME)) {
                                     background = false;
                                     Log.d(TAG, "is mm in foreground");
                                     sendNotifacationReply(event);
@@ -81,7 +83,7 @@ public class AutoReplyAccessibilityService extends BaseAccessibilityService {
                                 locked = false;
                                 Log.d(TAG, "the screen is unlocked");
                                 // 监听到微信红包的notification，打开通知
-                                if (isAppForeground(MM_PNAME)) {
+                                if (isAppForeground(Config.WECHAT_PACKAGENAME)) {
                                     background = false;
                                     Log.d(TAG, "is mm in foreground");
                                     sendNotifacationReply(event);
@@ -108,7 +110,7 @@ public class AutoReplyAccessibilityService extends BaseAccessibilityService {
                 if (!hasAction) break;
                 itemNodeinfo = null;
                 String className = event.getClassName().toString();
-                if (className.equals("com.tencent.mm.ui.LauncherUI")) {
+                if (Config.LauncherUI.equals(className.substring(0,Config.LauncherUI.length()))) {
                     if (fill()) {
                         send();
                     } else {
@@ -149,7 +151,7 @@ public class AutoReplyAccessibilityService extends BaseAccessibilityService {
                     .findAccessibilityNodeInfosByText("发送");
             if (list != null && list.size() > 0) {
                 for (AccessibilityNodeInfo n : list) {
-                    if (n.getClassName().equals("android.widget.Button") && n.isEnabled()) {
+                    if (n.getClassName().equals(Config.BUTTON_CLASS_NAME) && n.isEnabled()) {
                         n.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     }
                 }
@@ -159,7 +161,7 @@ public class AutoReplyAccessibilityService extends BaseAccessibilityService {
                         .findAccessibilityNodeInfosByText("Send");
                 if (liste != null && liste.size() > 0) {
                     for (AccessibilityNodeInfo n : liste) {
-                        if (n.getClassName().equals("android.widget.Button") && n.isEnabled()) {
+                        if (n.getClassName().equals(Config.BUTTON_CLASS_NAME) && n.isEnabled()) {
                             n.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                         }
                     }

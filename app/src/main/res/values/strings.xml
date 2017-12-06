@@ -42,7 +42,7 @@
     <string name="donate_title">打赏开发者</string>
     <string name="donate_summary">如果这份源码能帮到你，可以打赏我哦</string>
 
-    <string name="after_open_hongbao">拆红包</string>
+    <string name="after_open_luckymoney">拆红包</string>
     <string name="after_open_see">看看大家的手气(仅支持微信6.3.8版本以下)</string>
     <string name="after_open_none">静静地看着</string>
 

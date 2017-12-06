@@ -15,6 +15,15 @@ public class Config {
     public static final int VERSION_CODE = 1;
     public static final String VERSION_NAME = "1.0";
 
+    public static final String TEXTVIEW_CLASS_NAME = "android.widget.TextView";
+    public static final String IMAGEVIEW_CLASS_NAME = "android.widget.ImageView";
+    public static final String BUTTON_CLASS_NAME = "android.widget.Button";
+
+    public static final String WECHAT_PACKAGENAME = "com.tencent.mm";
+    public static final String LauncherUI = "com.tencent.mm.ui.LauncherUI";
+    public static final String LuckyMoneyReceiveUI = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI";
+    public static final String LuckyMoneyDetailUI = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI";
+
     public static final String ACTION_ACCESSBILITY_SERVICE_DISCONNECT = "com.deeplearning_app.ACCESSBILITY_DISCONNECT";
     public static final String ACTION_ACCESSBILITY_SERVICE_CONNECT = "com.deeplearning_app.ACCESSBILITY_CONNECT";
 
@@ -26,9 +35,9 @@ public class Config {
 
     public static final String PREFERENCE_NAME = "config";
     public static final String KEY_ENABLE_WECHAT = "KEY_ENABLE_WECHAT";
-    public static final String KEY_WECHAT_AFTER_OPEN_HONGBAO = "KEY_WECHAT_AFTER_OPEN_HONGBAO";
+    public static final String KEY_WECHAT_AFTER_OPEN_LUCKYMONEY = "KEY_WECHAT_AFTER_OPEN_LUCKYMONEY";
     public static final String KEY_WECHAT_DELAY_TIME = "KEY_WECHAT_DELAY_TIME";
-    public static final String KEY_WECHAT_AFTER_GET_HONGBAO = "KEY_WECHAT_AFTER_GET_HONGBAO";
+    public static final String KEY_WECHAT_AFTER_GET_LUCKYMONEY = "KEY_WECHAT_AFTER_GET_LUCKYMONEY";
     public static final String KEY_WECHAT_MODE = "KEY_WECHAT_MODE";
 
     public static final String KEY_NOTIFY_SOUND = "KEY_NOTIFY_SOUND";
@@ -37,7 +46,7 @@ public class Config {
 
     private static final String KEY_AGREEMENT = "KEY_AGREEMENT";
 
-    public static final int WX_AFTER_OPEN_HONGBAO = 0;//拆红包
+    public static final int WX_AFTER_OPEN_LUCKYMONEY = 0;//拆红包
     public static final int WX_AFTER_OPEN_SEE = 1; //看大家手气
     public static final int WX_AFTER_OPEN_NONE = 2; //静静地看着
 
@@ -95,9 +104,9 @@ public class Config {
     }
 
     /** 微信打开红包后的事件*/
-    public int getWechatAfterOpenHongBaoEvent() {
+    public int getWechatAfterOpenLuckyMoneyEvent() {
         int defaultValue = 0;
-        String result =  preferences.getString(KEY_WECHAT_AFTER_OPEN_HONGBAO, String.valueOf(defaultValue));
+        String result =  preferences.getString(KEY_WECHAT_AFTER_OPEN_LUCKYMONEY, String.valueOf(defaultValue));
         try {
             return Integer.parseInt(result);
         } catch (Exception e) {}
@@ -105,9 +114,9 @@ public class Config {
     }
 
     /** 微信抢到红包后的事件*/
-    public int getWechatAfterGetHongBaoEvent() {
+    public int getWechatAfterGetLuckyMoneyEvent() {
         int defaultValue = 1;
-        String result =  preferences.getString(KEY_WECHAT_AFTER_GET_HONGBAO, String.valueOf(defaultValue));
+        String result =  preferences.getString(KEY_WECHAT_AFTER_GET_LUCKYMONEY, String.valueOf(defaultValue));
         try {
             return Integer.parseInt(result);
         } catch (Exception e) {}
